@@ -1,0 +1,25 @@
+// File: /Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal/get_completed_reminders.jxa
+
+function getCompletedReminders(listName) {
+    console.log("Getting completed reminders for list: " + listName);
+    var Reminders = Application("Reminders");
+    var list = Reminders.lists().find(function(list) {
+        return list.name() === listName;
+    });
+    var completedReminders = [];
+    if (list) {
+        list.reminders().forEach(function(reminder) {
+            if (reminder.completed()) {
+                completedReminders.push({
+                    title: reminder.name(),
+                    completedDate: reminder.completionDate()
+                });
+            }
+        });
+    }
+    console.log("Completed getting reminders for list: " + listName);
+    return JSON.stringify(completedReminders);
+}
+
+var listName = $.NSProcessInfo.processInfo.arguments.objectAtIndex(4).js;
+JSON.stringify(getCompletedReminders(listName));
