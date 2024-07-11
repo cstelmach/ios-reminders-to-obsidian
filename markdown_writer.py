@@ -21,7 +21,9 @@ def get_header(level, text):
 def write_reminders_to_markdown(reminder_list, completed_reminders):
     folder_path = config['dailyNoteFolderOverwrite'] if config['dailyNoteFolderOverwrite'] else "/default/path/to/your/daily/notes"
     date_format = config['dailyNoteFilenameOverwrite'] if config['dailyNoteFilenameOverwrite'] else "%Y-%m-%d"
-    header_level = config.get('listHeaderLevel', 3)
+    list_header_level = config.get('listHeaderLevel', 3)
+    section_header = config.get('sectionHeader', "Completed Tasks")
+    section_header_level = config.get('sectionHeaderLevel', 2)
     date_format_for_datetime = config['dateFormat']
     time_format = config['timeFormat']
     separator = config['dateTimeSeparator']
@@ -39,8 +41,10 @@ def write_reminders_to_markdown(reminder_list, completed_reminders):
         formatted_filename_date = format_date_for_filename(date, date_format)
         filename = f"{folder_path}/{formatted_filename_date}.md"
         with open(filename, 'a') as file:
-            file.write(get_header(header_level, reminder_list))
+            # Write section header
+            file.write(get_header(section_header_level, section_header))
             for reminder in reminders:
+                file.write(get_header(list_header_level, reminder_list))
                 file.write(f"- [x] {reminder['name']}\n")
                 if reminder.get('body') and reminder['body'] != "missing value":
                     file.write(f"\t- {reminder['body']}\n")
@@ -57,4 +61,4 @@ def write_reminders_to_markdown(reminder_list, completed_reminders):
                 if reminder.get('completionDate') and reminder['completionDate'] != "":
                     formatted_completion_date = format_datetime(reminder['completionDate'], date_format_for_datetime, time_format, separator)
                     file.write(f"\t- completed: {formatted_completion_date}\n")
-            file.write("\n")
+                file.write("\n")

@@ -6,5 +6,7 @@
     "dateFormat": "[[JD YYYYMMDD]]",
     "timeFormat": "HH:mm",
     "dateTimeSeparator": " ",
-    "listHeaderLevel": 3
+    "listHeaderLevel": 3,
+    "sectionHeader": "Completed Tasks",
+    "sectionHeaderLevel": 2
 }
