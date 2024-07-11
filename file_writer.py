@@ -26,3 +26,7 @@ def append_reminders(file, reminders, list_header_level, reminder_list, date_for
             formatted_completion_time = format_time(reminder['completionDate'], time_format)
             file.write(f"\t- completed: {formatted_completion_date} {formatted_completion_time}\n")
     file.write("\n")
+
+def write_section_header(file, section_header, section_header_level):
+    file.write("\n\n")
+    file.write(get_header(section_header_level, section_header))

@@ -1,7 +1,7 @@
 from config import config
 from datetime_formatter import format_date_for_filename, format_date, format_time, format_datetime
 from header_checker import check_section_header_exists
-from file_writer import append_reminders, get_header
+from file_writer import append_reminders, get_header, write_section_header
 from datetime import datetime
 import os
 
@@ -32,5 +32,5 @@ def write_reminders_to_markdown(reminder_list, completed_reminders):
 
         with open(filename, 'a') as file:
             if not section_header_exists:
-                file.write(get_header(section_header_level, section_header))
+                write_section_header(file, section_header, section_header_level)
             append_reminders(file, reminders, list_header_level, reminder_list, date_format_for_datetime, time_format, separator, wrap_in_link)
