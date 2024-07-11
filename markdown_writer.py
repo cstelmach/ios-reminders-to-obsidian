@@ -18,6 +18,14 @@ def format_date_for_filename(date_obj, date_format):
 def get_header(level, text):
     return f"{'#' * level} {text}\n\n"
 
+def check_section_header_exists(filepath, section_header, section_header_level):
+    if not os.path.exists(filepath):
+        return False
+    with open(filepath, 'r') as file:
+        content = file.read()
+    header = f"\n{'#' * section_header_level} {section_header}\n"
+    return header in content
+
 def write_reminders_to_markdown(reminder_list, completed_reminders):
     folder_path = config['dailyNoteFolderOverwrite'] if config['dailyNoteFolderOverwrite'] else "/default/path/to/your/daily/notes"
     date_format = config['dailyNoteFilenameOverwrite'] if config['dailyNoteFilenameOverwrite'] else "%Y-%m-%d"
@@ -40,11 +48,13 @@ def write_reminders_to_markdown(reminder_list, completed_reminders):
     for date, reminders in reminders_by_date.items():
         formatted_filename_date = format_date_for_filename(date, date_format)
         filename = f"{folder_path}/{formatted_filename_date}.md"
+        section_header_exists = check_section_header_exists(filename, section_header, section_header_level)
+
         with open(filename, 'a') as file:
-            # Write section header
-            file.write(get_header(section_header_level, section_header))
+            if not section_header_exists:
+                file.write(get_header(section_header_level, section_header))
+            file.write(get_header(list_header_level, reminder_list))
             for reminder in reminders:
-                file.write(get_header(list_header_level, reminder_list))
                 file.write(f"- [x] {reminder['name']}\n")
                 if reminder.get('body') and reminder['body'] != "missing value":
                     file.write(f"\t- {reminder['body']}\n")
@@ -61,4 +71,4 @@ def write_reminders_to_markdown(reminder_list, completed_reminders):
                 if reminder.get('completionDate') and reminder['completionDate'] != "":
                     formatted_completion_date = format_datetime(reminder['completionDate'], date_format_for_datetime, time_format, separator)
                     file.write(f"\t- completed: {formatted_completion_date}\n")
-                file.write("\n")
+            file.write("\n")
