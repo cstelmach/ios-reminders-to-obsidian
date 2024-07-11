@@ -2,8 +2,9 @@
     "obsidianSettingsPath": "/Users/cs/Obsidian/_/.obsidian",
     "usePeriodicNotesPlugin": true,
     "dailyNoteFolderOverwrite": "/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal",
-    "dailyNoteFilenameOverwrite": "[JD] YYYYMMDD",
+    "dailyNoteFilenameOverwrite": "JD YYYYMMDD",
     "dateFormat": "[[JD YYYYMMDD]]",
     "timeFormat": "HH:mm",
-    "dateTimeSeparator": " "
+    "dateTimeSeparator": " ",
+    "listHeaderLevel": 3
 }

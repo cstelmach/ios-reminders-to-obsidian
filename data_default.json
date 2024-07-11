@@ -5,5 +5,6 @@
     "dailyNoteFilenameOverwrite": null,
     "dateFormat": "YYYY-MM-DD",
     "timeFormat": "HH:mm:SS",
-    "dateTimeSeparator": " "
+    "dateTimeSeparator": " ",
+    "listHeaderLevel": 3
 }
