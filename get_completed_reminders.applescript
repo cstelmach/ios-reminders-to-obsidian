@@ -7,7 +7,7 @@ on run argv
         set theList to list listName
         set completedReminders to {}
         repeat with aReminder in (every reminder of theList whose completed is true)
-            set end of completedReminders to "{ \"title\": \"" & name of aReminder & "\", \"completedDate\": \"" & completion date of aReminder & "\" }"
+            set end of completedReminders to "{ \"title\": \"" & name of aReminder & "\", \"completedDate\": \"" & (completion date of aReminder as «class isot» as string) & "\" }"
         end repeat
     end tell
     log "Completed getting reminders for list: " & listName
