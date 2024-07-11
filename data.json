@@ -3,10 +3,11 @@
     "usePeriodicNotesPlugin": true,
     "dailyNoteFolderOverwrite": "/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal",
     "dailyNoteFilenameOverwrite": "JD YYYYMMDD",
-    "dateFormat": "[[JD YYYYMMDD]]",
+    "dateFormat": "JD YYYYMMDD",
     "timeFormat": "HH:mm",
     "dateTimeSeparator": " ",
     "listHeaderLevel": 3,
     "sectionHeader": "Completed Tasks",
-    "sectionHeaderLevel": 2
+    "sectionHeaderLevel": 2,
+    "wrapDateStringInInternalLink": true
 }

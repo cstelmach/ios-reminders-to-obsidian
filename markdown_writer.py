@@ -2,15 +2,24 @@ from datetime import datetime
 from config import config
 import os
 
-def format_datetime(date_str, date_format, time_format, separator):
+def format_date(date_str, date_format, wrap_in_link):
     if date_str and date_str != "missing value":
         date_obj = datetime.fromisoformat(date_str)
         formatted_date = date_obj.strftime(date_format.replace('YYYY', '%Y').replace('MM', '%m').replace('DD', '%d'))
-        formatted_time = date_obj.strftime(time_format.replace('HH', '%H').replace('mm', '%M').replace('SS', '%S'))
-        formatted_datetime = f"{formatted_date}{separator}{formatted_time}"
+        
+        if wrap_in_link:
+            formatted_date = f"[[{formatted_date}]]"
     else:
-        formatted_datetime = ""
-    return formatted_datetime
+        formatted_date = ""
+    return formatted_date
+
+def format_time(date_str, time_format):
+    if date_str and date_str != "missing value":
+        date_obj = datetime.fromisoformat(date_str)
+        formatted_time = date_obj.strftime(time_format.replace('HH', '%H').replace('mm', '%M').replace('SS', '%S'))
+    else:
+        formatted_time = ""
+    return formatted_time
 
 def format_date_for_filename(date_obj, date_format):
     return date_obj.strftime(date_format.replace('YYYY', '%Y').replace('MM', '%m').replace('DD', '%d'))
@@ -34,7 +43,7 @@ def write_reminders_to_markdown(reminder_list, completed_reminders):
     section_header_level = config.get('sectionHeaderLevel', 2)
     date_format_for_datetime = config['dateFormat']
     time_format = config['timeFormat']
-    separator = config['dateTimeSeparator']
+    wrap_in_link = config.get('wrapDateStringInInternalLink', False)
 
     reminders_by_date = {}
     for reminder in completed_reminders:
@@ -61,14 +70,17 @@ def write_reminders_to_markdown(reminder_list, completed_reminders):
                 if reminder.get('priority') and reminder['priority'] != "0":
                     file.write(f"\t- priority: {reminder['priority']}\n")
                 if reminder.get('allDayDueDate') and reminder['allDayDueDate'] != "":
-                    formatted_all_day_due_date = format_datetime(reminder['allDayDueDate'], date_format_for_datetime, time_format, separator)
+                    formatted_all_day_due_date = format_date(reminder['allDayDueDate'], date_format_for_datetime, wrap_in_link)
                     file.write(f"\t- allday due: {formatted_all_day_due_date}\n")
                 if reminder.get('dueDate') and reminder['dueDate'] != "":
-                    formatted_due_date = format_datetime(reminder['dueDate'], date_format_for_datetime, time_format, separator)
-                    file.write(f"\t- due: {formatted_due_date}\n")
-                formatted_creation_date = format_datetime(reminder['creationDate'], date_format_for_datetime, time_format, separator)
-                file.write(f"\t- created: {formatted_creation_date}\n")
+                    formatted_due_date = format_date(reminder['dueDate'], date_format_for_datetime, wrap_in_link)
+                    formatted_due_time = format_time(reminder['dueDate'], time_format)
+                    file.write(f"\t- due: {formatted_due_date} {formatted_due_time}\n")
+                formatted_creation_date = format_date(reminder['creationDate'], date_format_for_datetime, wrap_in_link)
+                formatted_creation_time = format_time(reminder['creationDate'], time_format)
+                file.write(f"\t- created: {formatted_creation_date} {formatted_creation_time}\n")
                 if reminder.get('completionDate') and reminder['completionDate'] != "":
-                    formatted_completion_date = format_datetime(reminder['completionDate'], date_format_for_datetime, time_format, separator)
-                    file.write(f"\t- completed: {formatted_completion_date}\n")
+                    formatted_completion_date = format_date(reminder['completionDate'], date_format_for_datetime, wrap_in_link)
+                    formatted_completion_time = format_time(reminder['completionDate'], time_format)
+                    file.write(f"\t- completed: {formatted_completion_date} {formatted_completion_time}\n")
             file.write("\n")

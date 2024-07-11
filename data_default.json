@@ -8,5 +8,6 @@
     "dateTimeSeparator": " ",
     "listHeaderLevel": 3,
     "sectionHeader": "Completed Tasks",
-    "sectionHeaderLevel": 2
+    "sectionHeaderLevel": 2,
+    "wrapDateStringInInternalLink": false
 }
