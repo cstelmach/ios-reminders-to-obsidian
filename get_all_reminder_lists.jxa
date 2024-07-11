@@ -1,9 +1,0 @@
-// File: /Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal/get_all_reminder_lists.jxa
-
-console.log("Getting all reminder lists...");
-var Reminders = Application("Reminders");
-var lists = Reminders.lists().map(function(list) {
-    return list.name();
-});
-console.log("Retrieved all reminder lists.");
-JSON.stringify(lists);
