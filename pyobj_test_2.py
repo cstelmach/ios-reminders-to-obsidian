@@ -33,9 +33,8 @@ def get_reminders_from_list(list_name):
 def print_reminder_details(reminder):
     print(f"Title: {reminder.title()}")
     print(f"Notes: {reminder.notes()}")
-    print(reminder)
+    print(f"UUID: {reminder.UUID()}")
     # print all the reminder methods
-    print(dir(reminder))
     print(f"Completed: {'Yes' if reminder.isCompleted() else 'No'}")
     if reminder.dueDate():
         print(f"Due Date: {reminder.dueDate()}")
@@ -43,13 +42,12 @@ def print_reminder_details(reminder):
 
 # Main execution
 if __name__ == "__main__":
-    list_name = "task(code)"
+    list_name = "temp.crap"
     reminders = get_reminders_from_list(list_name)
     
     if reminders:
         print(f"Reminders in the list '{list_name}':")
         for reminder in reminders:
             print_reminder_details(reminder)
-            break
     else:
         print(f"No reminders found in the list '{list_name}'.")
