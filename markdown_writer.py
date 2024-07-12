@@ -1,3 +1,5 @@
+# ios_reminders_to_markdown_journal/markdown_writer.py
+
 from config import config
 from datetime_formatter import format_date_for_filename, format_date, format_time, format_datetime
 from header_checker import check_section_header_exists
@@ -20,11 +22,11 @@ def write_reminders_to_markdown(reminder_list, completed_reminders):
     for reminder in completed_reminders:
         completion_date_str = reminder['completionDate']
         if completion_date_str and completion_date_str != "missing value":
-            completion_date = datetime.fromisoformat(completion_date_str).date()
+            completion_date = datetime.strptime(completion_date_str, "%Y-%m-%d %H:%M:%S %z").date()
             if completion_date not in reminders_by_date:
                 reminders_by_date[completion_date] = []
             reminders_by_date[completion_date].append(reminder)
-    
+
     for date, reminders in reminders_by_date.items():
         formatted_filename_date = format_date_for_filename(date, date_format)
         filename = f"{folder_path}/{formatted_filename_date}.md"
@@ -33,4 +35,5 @@ def write_reminders_to_markdown(reminder_list, completed_reminders):
         with open(filename, 'a') as file:
             if not section_header_exists:
                 write_section_header(file, section_header, section_header_level)
-            append_reminders(file, reminders, list_header_level, reminder_list, date_format_for_datetime, time_format, separator, wrap_in_link)
+            append_reminders(file, reminders, list_header_level, reminder_list,
+                             date_format_for_datetime, time_format, separator, wrap_in_link)
