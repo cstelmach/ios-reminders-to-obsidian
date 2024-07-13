@@ -19,24 +19,39 @@ def append_reminders(
 ):
     file.write(get_header(list_header_level, reminder_list))
     for reminder in reminders:
-        file.write(f"- [x] {reminder['name']}\n")
+        # do the same for the reminder name
+        if reminder.get("name") and reminder["name"] != "missing value":
+            title_lines = reminder["name"].split("\n")
+            title_multi_line_prefix = ""
+
+            if reminder.get("parent_title"):
+                title_multi_line_prefix += "\t"
+
+            for i, line in enumerate(title_lines):
+                # if the line is empty or just spaces then replace it with "_"
+                if line.isspace() or not line:
+                    line = "_"
+                if i == 0:
+                    file.write(f"{title_multi_line_prefix}- [x] {line}\n")
+                else:
+                    file.write(f"{title_multi_line_prefix}\t  {line}\n")
+
         if reminder.get("body") and reminder["body"] != "missing value":
             # if the body contains multiple lines, then add a tab before each line
             # if the reminder has a parent, then add two tabs before each line
             # additionally the first line should have a "- " before the text, the others two spaces
-            lines = reminder["body"].split("\n")
+            body_lines = reminder["body"].split("\n")
+            body_multi_line_prefix = "\t"
 
-            multi_line_prefix = "\t"
             if reminder.get("parent_title"):
-                multi_line_prefix += "\t"
+                body_multi_line_prefix += "\t"
 
-            for i, line in enumerate(lines):
+            for i, line in enumerate(body_lines):
                 if i == 0:
-                    file.write(f"{multi_line_prefix}- {line}\n")
+                    file.write(f"{body_multi_line_prefix}- {line}\n")
                 else:
-                    file.write(f"{multi_line_prefix}  {line}\n")
+                    file.write(f"{body_multi_line_prefix}  {line}\n")
 
-            # file.write(f"\t- {reminder['body']}\n")
         if reminder.get("priority") and reminder["priority"] != 0:
             file.write(f"\t- priority: {reminder['priority']}\n")
 
