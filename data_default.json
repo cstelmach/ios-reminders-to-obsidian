@@ -9,5 +9,6 @@
     "listHeaderLevel": 3,
     "sectionHeader": "Completed Tasks",
     "sectionHeaderLevel": 2,
-    "wrapDateStringInInternalLink": false
+    "wrapDateStringInInternalLink": false,
+    "templateOverwritePath": null
 }

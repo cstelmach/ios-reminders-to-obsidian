@@ -1,0 +1,47 @@
+### Maybe OBE:
+
+- [ ] Take the settings from periodic notes plugin. OBE because better to have everything independently.
+
+````
+Enhance the functionailty of the program and the data.json and data_default.json functionality:
+
+/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal/data_default.json:1
+```json
+{
+    "obsidianSettingsPath": null,
+    "usePeriodicNotesPlugin": false,
+    "dailyNoteFolderOverwrite": null,
+    "dailyNoteFilenameOverwrite": null,
+    "dateFormat": "YYYY-MM-DD",
+    "timeFormat": "HH:mm:SS",
+    "dateTimeSeparator": " ",
+    "listHeaderLevel": 3,
+    "sectionHeader": "Completed Tasks",
+    "sectionHeaderLevel": 2,
+    "wrapDateStringInInternalLink": false
+}
+```
+
+If obsidianSettingsPath is specified and usePeriodicNotesPlugin is true, then inside the path search for the subpath with the file ../plugins/periodic-notes/data.json. 
+get the data from this  data.json file of the periodic-notes plugin. It will look like this:
+
+
+```json
+{ "key": "value",
+  "daily": {
+    "format": "[JD] YYYYMMDD",
+    "folder": "journal/day",
+    "template": "slipbox/resources/templates/RT Journal-Day.md",
+    "enabled": true
+  },
+...}
+```
+
+If no dailyNoteFolderOverwrite, dailyNoteFilenameOverwrite are given, take the daily.format as the file name and the daily.folder as the target folder instead.
+
+Also take the daily.template, which will specify a relative path of the parent of the obsidianSettingsPath, and will be the template you use for new markdown files, to which you append the completed reminders markdown.
+
+Also add a templateOverwritePath, which if specified will take the markdown file specified in this absolute path as template instead. Default value is Null. 
+
+
+````
