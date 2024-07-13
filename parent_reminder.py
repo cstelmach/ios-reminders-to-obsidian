@@ -20,7 +20,7 @@ def find_parent_reminder(reminder_uuid):
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
         query = """
-        SELECT ZPARENTREMINDER.ZCKIDENTIFIER as parent_uuid, ZPARENTREMINDER.ZTITLE as parent_title, ZPARENTREMINDER.ZCOMPLETED as parent_completed
+        SELECT ZPARENTREMINDER.ZCKIDENTIFIER as parent_uuid, ZPARENTREMINDER.ZTITLE as parent_title, ZPARENTREMINDER.ZCOMPLETIONDATE as parent_completion_date
         FROM ZREMCDREMINDER as CHILD
         JOIN ZREMCDREMINDER as ZPARENTREMINDER ON CHILD.ZCKPARENTREMINDERIDENTIFIER = ZPARENTREMINDER.ZCKIDENTIFIER
         WHERE CHILD.ZCKIDENTIFIER = ?
@@ -28,7 +28,7 @@ def find_parent_reminder(reminder_uuid):
         cursor.execute(query, (reminder_uuid,))
         result = cursor.fetchone()
         if result:
-            return {"uuid": result[0], "title": result[1], "completed": bool(result[2])}
+            return {"uuid": result[0], "title": result[1], "completion_date": result[2]}
         else:
             return None
     except sqlite3.Error as e:

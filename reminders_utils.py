@@ -22,7 +22,7 @@ def append_reminders(
         if reminder.get("parent_title"):
             parent_key = (
                 reminder["parent_title"],
-                reminder.get("parent_completed", False),
+                reminder.get("parent_completion_date"),
             )
             if parent_key not in parent_tasks:
                 parent_tasks[parent_key] = []
@@ -50,26 +50,23 @@ def append_reminders(
         )
         file.write("\n")
 
-    for (parent_title, parent_completed), subtasks in parent_tasks.items():
+    for (parent_title, parent_completion_date), subtasks in parent_tasks.items():
+        parent_completed = all(
+            subtask["completionDate"] == parent_completion_date
+            for subtask in subtasks
+            if parent_completion_date
+        )
         parent_checkbox = "[x]" if parent_completed else "[-]"
         write_multiline_text(
             file, parent_title, prefix="", initial_prefix=f"- {parent_checkbox} "
         )
         if parent_completed:
-            formatted_creation_date = format_date(
-                subtasks[0]["creationDate"], date_format_for_datetime, wrap_in_link
-            )
-            formatted_creation_time = format_time(
-                subtasks[0]["creationDate"], time_format
-            )
             formatted_completion_date = format_date(
-                subtasks[0]["completionDate"], date_format_for_datetime, wrap_in_link
+                parent_completion_date, date_format_for_datetime, wrap_in_link
             )
-            formatted_completion_time = format_time(
-                subtasks[0]["completionDate"], time_format
-            )
+            formatted_completion_time = format_time(parent_completion_date, time_format)
             file.write(
-                f"\t- created: {formatted_creation_date} {formatted_creation_time} -> completed: {formatted_completion_date} {formatted_completion_time}\n"
+                f"\t- completed: {formatted_completion_date} {formatted_completion_time}\n"
             )
         append_subtasks(
             file,
