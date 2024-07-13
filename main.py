@@ -1,4 +1,5 @@
 import json
+from config import config
 from reminders import (
     get_all_reminder_lists,
     get_completed_reminders_for_list,
@@ -47,7 +48,8 @@ def list_completed_reminders(test_list=None):
         # Write to Markdown file
         write_reminders_to_markdown(reminder_list, completed_reminders)
 
-    update_cache()
+    if config["isCacheActive"]:
+        update_cache()
 
     return all_completed_reminders
 

@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import datetime, timedelta
+from config import config
 
 CACHE_FILE = "cache.json"
 
@@ -22,14 +23,17 @@ def save_cache(last_extraction_date):
 
 
 def get_date_range():
-    cache = load_cache()
-    last_extraction_date = cache["last_extraction_date"]
-    if last_extraction_date:
-        start_date = datetime.strptime(
-            last_extraction_date, "%Y-%m-%d"
-        ).date() + timedelta(days=1)
+    if not config["isCacheActive"]:
+        start_date = datetime(1, 1, 1).date()  # very far in the past
     else:
-        start_date = None  # Indicates that all reminders should be fetched
+        cache = load_cache()
+        last_extraction_date = cache["last_extraction_date"]
+        if last_extraction_date:
+            start_date = datetime.strptime(
+                last_extraction_date, "%Y-%m-%d"
+            ).date() + timedelta(days=1)
+        else:
+            start_date = None  # Indicates that all reminders should be fetched
     end_date = (datetime.now() - timedelta(days=1)).date()
     return start_date, end_date
 
