@@ -21,7 +21,22 @@ def append_reminders(
     for reminder in reminders:
         file.write(f"- [x] {reminder['name']}\n")
         if reminder.get("body") and reminder["body"] != "missing value":
-            file.write(f"\t- {reminder['body']}\n")
+            # if the body contains multiple lines, then add a tab before each line
+            # if the reminder has a parent, then add two tabs before each line
+            # additionally the first line should have a "- " before the text, the others two spaces
+            lines = reminder["body"].split("\n")
+
+            multi_line_prefix = "\t"
+            if reminder.get("parent_title"):
+                multi_line_prefix += "\t"
+
+            for i, line in enumerate(lines):
+                if i == 0:
+                    file.write(f"{multi_line_prefix}- {line}\n")
+                else:
+                    file.write(f"{multi_line_prefix}  {line}\n")
+
+            # file.write(f"\t- {reminder['body']}\n")
         if reminder.get("priority") and reminder["priority"] != 0:
             file.write(f"\t- priority: {reminder['priority']}\n")
 
