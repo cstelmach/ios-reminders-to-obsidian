@@ -1,5 +1,3 @@
-# ios_reminders_to_markdown_journal/main.py
-
 import json
 from reminders import get_all_reminder_lists, get_completed_reminders_for_list, find_parent_reminder
 from markdown_writer import write_reminders_to_markdown
