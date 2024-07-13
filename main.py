@@ -29,8 +29,10 @@ def list_completed_reminders(test_list=None):
             parent = find_parent_reminder(reminder["UUID"])
             if parent:
                 reminder["parent_title"] = parent["title"]
+                reminder["parent_completed"] = parent["completed"]
             else:
                 reminder["parent_title"] = None
+                reminder["parent_completed"] = None
 
         print(
             f"Raw output for list {reminder_list}: {json.dumps(completed_reminders, indent=2)}"

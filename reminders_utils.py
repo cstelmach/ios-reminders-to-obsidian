@@ -20,9 +20,13 @@ def append_reminders(
 
     for reminder in reminders:
         if reminder.get("parent_title"):
-            if reminder["parent_title"] not in parent_tasks:
-                parent_tasks[reminder["parent_title"]] = []
-            parent_tasks[reminder["parent_title"]].append(reminder)
+            parent_key = (
+                reminder["parent_title"],
+                reminder.get("parent_completed", False),
+            )
+            if parent_key not in parent_tasks:
+                parent_tasks[parent_key] = []
+            parent_tasks[parent_key].append(reminder)
         else:
             child_tasks.append(reminder)
 
@@ -46,17 +50,18 @@ def append_reminders(
         )
         file.write("\n")
 
-    for parent, subtasks in parent_tasks.items():
-        parent_completed = all(subtask["completionDate"] for subtask in subtasks)
+    for (parent_title, parent_completed), subtasks in parent_tasks.items():
         parent_checkbox = "[x]" if parent_completed else "[-]"
         write_multiline_text(
-            file, parent, prefix="", initial_prefix=f"- {parent_checkbox} "
+            file, parent_title, prefix="", initial_prefix=f"- {parent_checkbox} "
         )
-        formatted_creation_date = format_date(
-            subtasks[0]["creationDate"], date_format_for_datetime, wrap_in_link
-        )
-        formatted_creation_time = format_time(subtasks[0]["creationDate"], time_format)
         if parent_completed:
+            formatted_creation_date = format_date(
+                subtasks[0]["creationDate"], date_format_for_datetime, wrap_in_link
+            )
+            formatted_creation_time = format_time(
+                subtasks[0]["creationDate"], time_format
+            )
             formatted_completion_date = format_date(
                 subtasks[0]["completionDate"], date_format_for_datetime, wrap_in_link
             )
