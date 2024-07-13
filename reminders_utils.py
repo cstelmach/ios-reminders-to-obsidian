@@ -17,96 +17,151 @@ def append_reminders(
 ):
     file.write(get_header(list_header_level, reminder_list))
 
-    parent_tasks = {}
-    child_tasks = []
+    main_tasks, child_tasks = separate_tasks(reminders)
+    child_tasks_by_parent_uuid = group_child_tasks_by_parent(child_tasks)
 
-    for reminder in reminders:
-        if reminder.get("parent_title"):
-            parent_key = (
-                reminder["parent_title"],
-                reminder.get("parent_completion_date"),
+    process_main_tasks(
+        file,
+        main_tasks,
+        child_tasks_by_parent_uuid,
+        date_format_for_datetime,
+        time_format,
+        separator,
+        wrap_in_link,
+    )
+    process_child_tasks_without_parent(
+        file,
+        child_tasks_by_parent_uuid,
+        main_tasks,
+        date_format_for_datetime,
+        time_format,
+        separator,
+        wrap_in_link,
+    )
+
+
+def separate_tasks(reminders):
+    main_tasks = {
+        reminder["UUID"]: reminder
+        for reminder in reminders
+        if not reminder.get("parent_uuid")
+    }
+    child_tasks = [reminder for reminder in reminders if reminder.get("parent_uuid")]
+    return main_tasks, child_tasks
+
+
+def group_child_tasks_by_parent(child_tasks):
+    child_tasks_by_parent_uuid = {}
+    for task in child_tasks:
+        parent_uuid = task["parent_uuid"]
+        if parent_uuid not in child_tasks_by_parent_uuid:
+            child_tasks_by_parent_uuid[parent_uuid] = []
+        child_tasks_by_parent_uuid[parent_uuid].append(task)
+    return child_tasks_by_parent_uuid
+
+
+def process_main_tasks(
+    file,
+    main_tasks,
+    child_tasks_by_parent_uuid,
+    date_format_for_datetime,
+    time_format,
+    separator,
+    wrap_in_link,
+):
+    print("main_tasks", main_tasks)
+
+    for parent_uuid, parent_task in main_tasks.items():
+        if parent_uuid in child_tasks_by_parent_uuid:
+            parent_completed = parent_task["completionDate"] is not None
+            parent_checkbox = "[x]" if parent_completed else "[-]"
+            write_multiline_text(
+                file,
+                parent_task["name"],
+                prefix="",
+                initial_prefix=f"- {parent_checkbox} ",
             )
-            if parent_key not in parent_tasks:
-                parent_tasks[parent_key] = []
-            parent_tasks[parent_key].append(reminder)
+
+            if parent_completed:
+                write_task_body_and_dates(
+                    file,
+                    parent_task,
+                    date_format_for_datetime,
+                    time_format,
+                    wrap_in_link,
+                )
+
+            append_subtasks(
+                file,
+                child_tasks_by_parent_uuid[parent_uuid],
+                date_format_for_datetime,
+                time_format,
+                separator,
+                wrap_in_link,
+                "\t",
+            )
+            file.write("\n")
         else:
-            child_tasks.append(reminder)
-
-    for reminder in child_tasks:
-        if reminder.get("name") and reminder["name"] != "missing value":
-            write_multiline_text(file, reminder["name"])
-            if reminder.get("body") and reminder["body"] != "missing value":
-                write_multiline_body(file, reminder["body"], prefix="\t")
-            if reminder.get("priority") and reminder["priority"] != 0:
-                file.write(f"\t- priority: {reminder['priority']}\n")
-
-            formatted_creation_date = format_date(
-                reminder["creationDate"], date_format_for_datetime, wrap_in_link
+            # If the parent task has no subtasks, just write the task
+            parent_completed = parent_task["completionDate"] is not None
+            parent_checkbox = "[x]" if parent_completed else "[-]"
+            write_multiline_text(
+                file,
+                parent_task["name"],
+                prefix="",
+                initial_prefix=f"- {parent_checkbox} ",
             )
-            formatted_creation_time = format_time(reminder["creationDate"], time_format)
-            formatted_completion_date = format_date(
-                reminder["completionDate"], date_format_for_datetime, wrap_in_link
-            )
-            formatted_completion_time = format_time(
-                reminder["completionDate"], time_format
-            )
-
-            file.write(
-                f"\t- created: {formatted_creation_date} {formatted_creation_time} -> completed: {formatted_completion_date} {formatted_completion_time}\n"
+            write_task_body_and_dates(
+                file,
+                parent_task,
+                date_format_for_datetime,
+                time_format,
+                wrap_in_link,
             )
             file.write("\n")
 
-    for (parent_title, parent_completion_date), subtasks in parent_tasks.items():
-        parent_completed = (
-            all(
-                compare_dates(subtask["completionDate"], parent_completion_date)
-                for subtask in subtasks
+
+def process_child_tasks_without_parent(
+    file,
+    child_tasks_by_parent_uuid,
+    main_tasks,
+    date_format_for_datetime,
+    time_format,
+    separator,
+    wrap_in_link,
+):
+    for parent_uuid, subtasks in child_tasks_by_parent_uuid.items():
+        if parent_uuid not in main_tasks:
+            parent_checkbox = "[-]"
+            parent_title = subtasks[0]["parent_title"]
+            write_multiline_text(
+                file, parent_title, prefix="", initial_prefix=f"- {parent_checkbox} "
             )
-            if parent_completion_date
-            else False
-        )
-
-        parent_checkbox = "[x]" if parent_completed else "[-]"
-        write_multiline_text(
-            file, parent_title, prefix="", initial_prefix=f"- {parent_checkbox} "
-        )
-
-        if parent_completed:
-            formatted_completion_date = format_date(
-                parent_completion_date, date_format_for_datetime, wrap_in_link
+            append_subtasks(
+                file,
+                subtasks,
+                date_format_for_datetime,
+                time_format,
+                separator,
+                wrap_in_link,
+                "\t",
             )
-            formatted_completion_time = format_time(parent_completion_date, time_format)
-            file.write(
-                f"\t- completed: {formatted_completion_date} {formatted_completion_time}\n"
-            )
-
-        append_subtasks(
-            file,
-            subtasks,
-            date_format_for_datetime,
-            time_format,
-            separator,
-            wrap_in_link,
-            "\t",
-        )
-        file.write("\n")
+            file.write("\n")
 
 
-def compare_dates(date1, date2):
-    print(f"date1: {date1}, date2: {date2}")
-    if not date1 or not date2:
-        return False
-
-    def parse_date(date_input):
-        if isinstance(date_input, str):
-            return datetime.strptime(date_input, "%Y-%m-%d %H:%M:%S %z").date()
-        elif isinstance(date_input, float):
-            cocoa_reference_date = datetime(2001, 1, 1)
-            return (cocoa_reference_date + timedelta(seconds=date_input)).date()
-        else:
-            raise ValueError(f"Unsupported date format: {type(date_input)}")
-
-    date1_obj = parse_date(date1)
-    date2_obj = parse_date(date2)
-    print(f"date1_obj: {date1_obj}, date2_obj: {date2_obj}")
-    return date1_obj == date2_obj
+def write_task_body_and_dates(
+    file, task, date_format_for_datetime, time_format, wrap_in_link
+):
+    if task.get("body") and task["body"] != "missing value":
+        write_multiline_body(file, task["body"], prefix="\t")
+    formatted_creation_date = format_date(
+        task["creationDate"], date_format_for_datetime, wrap_in_link
+    )
+    formatted_creation_time = format_time(task["creationDate"], time_format)
+    formatted_completion_date = format_date(
+        task["completionDate"], date_format_for_datetime, wrap_in_link
+    )
+    formatted_completion_time = format_time(task["completionDate"], time_format)
+    file.write(
+        f"\t- created: {formatted_creation_date} {formatted_creation_time} -> completed: {formatted_completion_date} {formatted_completion_time}\n"
+    )
