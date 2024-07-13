@@ -5,6 +5,7 @@ from reminders import (
     find_parent_reminder,
 )
 from file_writer import write_reminders_to_markdown
+from cache_utils import get_date_range, update_cache
 
 
 def list_completed_reminders(test_list=None):
@@ -19,17 +20,21 @@ def list_completed_reminders(test_list=None):
     for reminder_list in reminder_lists:
         print(reminder_list)
 
+    start_date, end_date = get_date_range()
+
     all_completed_reminders = {}
     for reminder_list in reminder_lists:
         print(f"Getting completed reminders for list: {reminder_list}...")
-        completed_reminders = get_completed_reminders_for_list(reminder_list)
+        completed_reminders = get_completed_reminders_for_list(
+            reminder_list, start_date, end_date
+        )
 
         # Find parent tasks for subtasks
         for reminder in completed_reminders:
             parent = find_parent_reminder(reminder["UUID"])
             if parent:
-                reminder["parent_title"] = parent["title"]
-                reminder["parent_uuid"] = parent["uuid"]
+                reminder["parent_title"] = parent.get("title", "No title")
+                reminder["parent_uuid"] = parent.get("uuid")
             else:
                 reminder["parent_title"] = None
                 reminder["parent_uuid"] = None
@@ -41,6 +46,8 @@ def list_completed_reminders(test_list=None):
 
         # Write to Markdown file
         write_reminders_to_markdown(reminder_list, completed_reminders)
+
+    update_cache()
 
     return all_completed_reminders
 

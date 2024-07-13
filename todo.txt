@@ -1,6 +1,9 @@
 ### Maybe OBE:
 
-- [ ] Take the settings from periodic notes plugin. OBE because better to have everything independently.
+- [ ] OBE: Order the completed reminders by their completion date?
+
+
+- [ ] OBE?: Take the settings from periodic notes plugin. OBE because better to have everything independently.
 
 ````
 Enhance the functionailty of the program and the data.json and data_default.json functionality:

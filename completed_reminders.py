@@ -1,9 +1,9 @@
 from Foundation import NSDate
 from EventKit import EKEventStore, EKEntityTypeReminder
-from datetime import datetime
+from datetime import datetime, date
 
 
-def get_completed_reminders_for_list(list_name):
+def get_completed_reminders_for_list(list_name, start_date=None, end_date=None):
     store = EKEventStore.alloc().init()
     store.requestAccessToEntityType_completion_(EKEntityTypeReminder, None)
     calendars = store.calendarsForEntityType_(EKEntityTypeReminder)
@@ -19,27 +19,22 @@ def get_completed_reminders_for_list(list_name):
     reminders = store.remindersMatchingPredicate_(predicate)
 
     completed_reminders = []
-    today = datetime.now().date()
-
     for reminder in reminders:
         if reminder.isCompleted():
-            completion_date = (
-                reminder.completionDate().description()
-                if reminder.completionDate()
-                else None
-            )
+            completion_date = reminder.completionDate()
             if completion_date:
-                # Parse the completion date
-                completion_date_obj = datetime.strptime(
-                    completion_date, "%Y-%m-%d %H:%M:%S %z"
+                completion_date = datetime.strptime(
+                    completion_date.description(), "%Y-%m-%d %H:%M:%S %z"
                 ).date()
-                if completion_date_obj < today:
+                if (start_date is None or completion_date >= start_date) and (
+                    end_date is None or completion_date <= end_date
+                ):
                     completed_reminders.append(
                         {
                             "name": reminder.title(),
                             "body": reminder.notes(),
                             "creationDate": reminder.creationDate().description(),
-                            "completionDate": completion_date,
+                            "completionDate": completion_date.strftime("%Y-%m-%d"),
                             "allDayDueDate": reminder.dueDateAllDay(),
                             "dueDate": (
                                 reminder.dueDate().description()
@@ -48,7 +43,6 @@ def get_completed_reminders_for_list(list_name):
                             ),
                             "priority": reminder.priority(),
                             "UUID": reminder.calendarItemIdentifier(),
-                            "parent_uuid": reminder.calendarItemExternalIdentifier(),
                         }
                     )
 

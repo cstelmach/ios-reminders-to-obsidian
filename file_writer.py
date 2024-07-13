@@ -4,7 +4,7 @@ from config import config
 from datetime_formatter import format_date_for_filename
 from header_checker import check_section_header_exists
 from header_utils import write_section_header
-from reminders_utils import append_reminders
+from append_reminders import append_reminders
 from datetime import datetime
 
 
@@ -51,9 +51,7 @@ def write_reminders_to_markdown(reminder_list, completed_reminders):
     for reminder in completed_reminders:
         completion_date_str = reminder["completionDate"]
         if completion_date_str and completion_date_str != "missing value":
-            completion_date = datetime.strptime(
-                completion_date_str, "%Y-%m-%d %H:%M:%S %z"
-            ).date()
+            completion_date = datetime.strptime(completion_date_str, "%Y-%m-%d").date()
             if completion_date not in reminders_by_date:
                 reminders_by_date[completion_date] = []
             reminders_by_date[completion_date].append(reminder)
@@ -72,7 +70,7 @@ def write_reminders_to_markdown(reminder_list, completed_reminders):
                         file.write(template_file.read())
                 else:
                     file.write("\n\n")
-        
+
         # Append reminders to the daily note
         with open(filename, "a") as file:
             if not section_header_exists:
