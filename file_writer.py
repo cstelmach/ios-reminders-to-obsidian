@@ -24,6 +24,10 @@ def write_reminders_to_markdown(reminder_list, completed_reminders):
             filename, config["sectionHeader"], config["sectionHeaderLevel"]
         )
 
+        if config["skipNotesAlreadyImported"] and section_header_exists:
+            print(f"Skipping {filename} as it already contains the completed tasks header.")
+            continue
+
         create_file_if_not_exists(filename, template_path)
 
         append_reminders_to_file(

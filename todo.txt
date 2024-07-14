@@ -1,3 +1,11 @@
+# iOS Reminders Export to Markdown Journal python_modules
+
+AI LINK: https://chatgpt.com/share/33cb0247-8c45-4fd1-a1e5-f2c11ec114e5
+
+
+
+
+
 ### Maybe OBE:
 
 - [ ] OBE: Order the completed reminders by their completion date?
