@@ -9,13 +9,16 @@ from file_writer import write_reminders_to_markdown
 from cache_utils import get_date_range, update_cache
 
 
-def list_completed_reminders(test_list=None):
-    if not test_list:
+def list_completed_reminders(test_lists=None):
+    if not test_lists:
         print("Getting all reminder lists...")
         reminder_lists = get_all_reminder_lists()
         reminder_lists = [rl["title"] for rl in reminder_lists]
     else:
-        reminder_lists = [test_list]
+        # if test_lists is a string, make it a list
+        if isinstance(test_lists, str):
+            test_lists = [test_lists]
+        reminder_lists = test_lists
 
     print("All reminder lists:")
     for reminder_list in reminder_lists:
@@ -40,9 +43,6 @@ def list_completed_reminders(test_list=None):
                 reminder["parent_title"] = None
                 reminder["parent_uuid"] = None
 
-        print(
-            f"Raw output for list {reminder_list}: {json.dumps(completed_reminders, indent=2)}"
-        )
         all_completed_reminders[reminder_list] = completed_reminders
 
         # Write to Markdown file
@@ -55,6 +55,5 @@ def list_completed_reminders(test_list=None):
 
 
 if __name__ == "__main__":
-    test_list = "temp.crap"
-    completed_reminders = list_completed_reminders(test_list=test_list)
-    print(json.dumps(completed_reminders, indent=2))
+    test_lists = ["temp.crap", "temp.mayfly"]
+    completed_reminders = list_completed_reminders(test_lists=test_lists)
