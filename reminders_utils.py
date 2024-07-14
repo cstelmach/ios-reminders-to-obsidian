@@ -4,7 +4,6 @@ from group_child_tasks import group_child_tasks_by_parent
 from process_main_tasks import process_main_tasks
 from process_child_tasks_without_parent import process_child_tasks_without_parent
 
-
 def append_reminders(
     file,
     reminders,
