@@ -1,6 +1,7 @@
 from .indentation_utils import write_multiline_text, write_multiline_body
 from processing.task_utils import write_task_tags
 from .task_datetime_formatter import format_task_dates
+from .task_property_formatter import format_task_properties
 from config import config
 
 
@@ -66,6 +67,11 @@ def write_task(
         file.write(f"{prefix}\t- {date_string}\n")
 
         write_task_tags(file, task.get("tags", []), prefix=prefix)
+
+        # Write additional task properties
+        properties = format_task_properties(task)
+        for prop in properties:
+            file.write(f"{prefix}\t- {prop}\n")
 
     if subtasks:
         file.write(f"{prefix}\t- Subtasks:\n")
