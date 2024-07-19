@@ -1,15 +1,12 @@
 import os
 from datetime import datetime
 from config import config
-from utils.datetime_formatter import format_date_for_filename
+from utils.datetime_formatter import format_date_for_filename, format_date, format_time
 from .header_utils import check_section_header_exists, write_section_header, get_header
 from .file_utils import get_paths_and_template, create_file_if_not_exists
-from processing.task_processing import (
-    separate_tasks,
-    group_child_tasks_by_parent,
-    process_main_tasks,
-    process_child_tasks_without_parent,
-)
+from .indentation_utils import write_multiline_text, write_multiline_body
+from processing.task_processing import separate_tasks, group_child_tasks_by_parent
+from processing.task_utils import write_task_tags
 
 
 def write_reminders_to_markdown(reminder_list, completed_reminders):
@@ -86,33 +83,61 @@ def append_reminders(
     main_tasks, child_tasks = separate_tasks(reminders)
     child_tasks_by_parent_uuid = group_child_tasks_by_parent(child_tasks)
 
-    process_main_tasks(
-        file,
-        main_tasks,
-        child_tasks_by_parent_uuid,
-        date_format_for_datetime,
-        time_format,
-        separator,
-        wrap_in_link,
-    )
-    process_child_tasks_without_parent(
-        file,
-        child_tasks_by_parent_uuid,
-        main_tasks,
-        date_format_for_datetime,
-        time_format,
-        separator,
-        wrap_in_link,
-    )
+    # Sort main tasks by completion date
+    sorted_main_tasks = sorted(main_tasks.values(), key=lambda x: x["completionDate"])
+
+    for task in sorted_main_tasks:
+        write_task(
+            file,
+            task,
+            child_tasks_by_parent_uuid.get(task["UUID"], []),
+            date_format_for_datetime,
+            time_format,
+            separator,
+            wrap_in_link,
+        )
+
+    # Process orphaned child tasks
+    orphaned_child_tasks = [
+        task
+        for tasks in child_tasks_by_parent_uuid.values()
+        for task in tasks
+        if task["parent_uuid"] not in main_tasks
+    ]
+    if orphaned_child_tasks:
+        file.write("\n### Orphaned Subtasks\n")
+        for task in sorted(orphaned_child_tasks, key=lambda x: x["completionDate"]):
+            write_task(
+                file,
+                task,
+                [],
+                date_format_for_datetime,
+                time_format,
+                separator,
+                wrap_in_link,
+                is_subtask=True,
+            )
 
 
-def write_task_body_and_dates(
-    file, task, date_format_for_datetime, time_format, wrap_in_link
+def write_task(
+    file,
+    task,
+    subtasks,
+    date_format_for_datetime,
+    time_format,
+    separator,
+    wrap_in_link,
+    is_subtask=False,
 ):
-    from utils.datetime_formatter import format_date, format_time
+    prefix = "\t" if is_subtask else ""
+    checkbox = "[x]" if task["completionDate"] else "[-]"
+    write_multiline_text(
+        file, task["name"], prefix=prefix, initial_prefix=f"- {checkbox} "
+    )
 
     if task.get("body") and task["body"] != "missing value":
-        write_multiline_body(file, task["body"], prefix="\t")
+        write_multiline_body(file, task["body"], prefix=prefix + "\t")
+
     formatted_creation_date = format_date(
         task["creationDate"], date_format_for_datetime, wrap_in_link
     )
@@ -121,17 +146,28 @@ def write_task_body_and_dates(
         task["completionDate"], date_format_for_datetime, wrap_in_link
     )
     formatted_completion_time = format_time(task["completionDate"], time_format)
+
     file.write(
-        f"\t- created: {formatted_creation_date} {formatted_creation_time} -> completed: {formatted_completion_date} {formatted_completion_time}\n"
+        f"{prefix}\t- created: {formatted_creation_date} {formatted_creation_time} -> completed: {formatted_completion_date} {formatted_completion_time}\n"
     )
+
     if task.get("url"):
-        file.write(f"\t- URL: {task['url']}\n")
+        file.write(f"{prefix}\t- URL: {task['url']}\n")
 
+    write_task_tags(file, task.get("tags", []), prefix=prefix)
 
-def write_multiline_body(file, body, prefix=""):
-    lines = body.split("\n")
-    for i, line in enumerate(lines):
-        if i == 0:
-            file.write(f"{prefix}- {line}\n")
-        else:
-            file.write(f"{prefix}  {line}\n")
+    if subtasks:
+        file.write(f"{prefix}\t- Subtasks:\n")
+        for subtask in sorted(subtasks, key=lambda x: x["completionDate"]):
+            write_task(
+                file,
+                subtask,
+                [],
+                date_format_for_datetime,
+                time_format,
+                separator,
+                wrap_in_link,
+                is_subtask=True,
+            )
+
+    file.write("\n")
