@@ -6,7 +6,7 @@ from reminders import (
     find_parent_reminder,
 )
 from file_writer import write_reminders_to_markdown
-from cache_utils import get_date_range, update_cache
+from utils import get_date_range, update_cache
 
 
 def list_completed_reminders(test_lists=None):

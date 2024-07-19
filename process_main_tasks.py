@@ -1,7 +1,8 @@
-from datetime_formatter import format_date, format_time
+from utils.datetime_formatter import format_date, format_time
 from indentation_utils import write_multiline_text, write_multiline_body
 from subtasks_utils import append_subtasks
 from task_utils import write_task_tags  # Import the new function
+
 
 def process_main_tasks(
     file,
@@ -31,7 +32,7 @@ def process_main_tasks(
                     time_format,
                     wrap_in_link,
                 )
-            
+
             # Write tags for parent task
             write_task_tags(file, parent_task.get("tags", []))
 
@@ -62,11 +63,12 @@ def process_main_tasks(
                 time_format,
                 wrap_in_link,
             )
-            
+
             # Write tags for parent task
             write_task_tags(file, parent_task.get("tags", []))
-            
+
             file.write("\n")
+
 
 def write_task_body_and_dates(
     file, task, date_format_for_datetime, time_format, wrap_in_link
@@ -76,6 +78,7 @@ def write_task_body_and_dates(
     formatted_creation_date = format_date(
         task["creationDate"], date_format_for_datetime, wrap_in_link
     )
+
     formatted_creation_time = format_time(task["creationDate"], time_format)
     formatted_completion_date = format_date(
         task["completionDate"], date_format_for_datetime, wrap_in_link

@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 from config import config
-from datetime_formatter import format_date_for_filename
+from utils.datetime_formatter import format_date_for_filename
 from header_checker import check_section_header_exists
 from append_reminders import append_reminders
 from reminder_processing import group_reminders_by_date
