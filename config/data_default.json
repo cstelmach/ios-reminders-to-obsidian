@@ -22,5 +22,6 @@
   "tagDependentCompletionKinds": {
     "cancelled": ["OBE", "CANCELLED"],
     "partiallyComplete": ["partiallyComplete"]
-  }
+  },
+  "useMetadataFormattingForDatetimes": false
 }

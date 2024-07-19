@@ -21,6 +21,7 @@
   "cancelledCheckbox": "[~]",
   "tagDependentCompletionKinds": {
     "cancelled": ["OBE", "CANCELLED"],
-    "partiallyComplete": ["partiallyComplete", "TESTTAGSTRING1"]
-  }
+    "partiallyComplete": ["partiallyComplete"]
+  },
+  "useMetadataFormattingForDatetimes": true
 }
