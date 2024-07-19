@@ -40,10 +40,22 @@ def append_reminders(
     main_tasks, child_tasks = separate_tasks(reminders)
     child_tasks_by_parent_uuid = group_child_tasks_by_parent(child_tasks)
 
-    # Sort main tasks by completion date
-    sorted_main_tasks = sorted(main_tasks.values(), key=lambda x: x["completionDate"])
+    # Combine main tasks and parent tasks of completed subtasks
+    all_parent_tasks = {**main_tasks}
+    for child_task in child_tasks:
+        if child_task["parent_uuid"] not in all_parent_tasks:
+            all_parent_tasks[child_task["parent_uuid"]] = {
+                "UUID": child_task["parent_uuid"],
+                "name": child_task["parent_title"],
+                "completionDate": None,  # Parent task is not completed
+            }
 
-    for task in sorted_main_tasks:
+    # Sort all parent tasks by completion date, with incomplete tasks at the end
+    sorted_parent_tasks = sorted(
+        all_parent_tasks.values(), key=lambda x: x["completionDate"] or "9999-12-31"
+    )
+
+    for task in sorted_parent_tasks:
         write_task(
             file,
             task,
@@ -53,24 +65,3 @@ def append_reminders(
             separator,
             wrap_in_link,
         )
-
-    # Process orphaned child tasks
-    orphaned_child_tasks = [
-        task
-        for tasks in child_tasks_by_parent_uuid.values()
-        for task in tasks
-        if task["parent_uuid"] not in main_tasks
-    ]
-    if orphaned_child_tasks:
-        file.write("\n### Orphaned Subtasks\n")
-        for task in sorted(orphaned_child_tasks, key=lambda x: x["completionDate"]):
-            write_task(
-                file,
-                task,
-                [],
-                date_format_for_datetime,
-                time_format,
-                separator,
-                wrap_in_link,
-                is_subtask=True,
-            )
