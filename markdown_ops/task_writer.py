@@ -61,17 +61,19 @@ def write_task(
         if body and body != "missing value":
             write_multiline_body(file, body, prefix=prefix + "\t")
 
+        # Write additional task properties (including priority if it exists)
+        properties = format_task_properties(task)
+        for prop in properties:
+            file.write(f"{prefix}\t- {prop}\n")
+
+        # Write date string (creation/due/completion)
         date_string = format_task_dates(
             task, date_format_for_datetime, time_format, wrap_in_link
         )
         file.write(f"{prefix}\t- {date_string}\n")
 
+        # Write tags
         write_task_tags(file, task.get("tags", []), prefix=prefix)
-
-        # Write additional task properties
-        properties = format_task_properties(task)
-        for prop in properties:
-            file.write(f"{prefix}\t- {prop}\n")
 
     if subtasks:
         file.write(f"{prefix}\t- Subtasks:\n")
