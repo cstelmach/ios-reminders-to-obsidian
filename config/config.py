@@ -15,17 +15,18 @@ def load_config(config_file="data.json", default_config_file="data_default.json"
         with open(default_config_path, "r") as file:
             config = json.load(file)
 
-    # Convert string patterns to regex objects
-    if "listsToImport" in config:
-        config["listsToImport"] = [
-            (
-                re.compile(pattern)
-                if isinstance(pattern, str)
-                and any(c in pattern for c in r".*?+^$()[]{|}\\")
-                else pattern
-            )
-            for pattern in config["listsToImport"]
-        ]
+    # Convert string patterns to regex objects for listsToImport and listsToOmit
+    for key in ["listsToImport", "listsToOmit"]:
+        if key in config:
+            config[key] = [
+                (
+                    re.compile(pattern)
+                    if isinstance(pattern, str)
+                    and any(c in pattern for c in r".*?+^$()[]{|}\\")
+                    else pattern
+                )
+                for pattern in config[key]
+            ]
 
     return config
 

@@ -13,5 +13,7 @@
   "templateOverwritePath": null,
   "isCacheActive": true,
   "skipNotesAlreadyImported": true,
-  "listsToImport": []
+  "listsToImport": [],
+  "importButAllOverwrite": false,
+  "listsToOmit": []
 }
