@@ -1,12 +1,38 @@
 # iOS Reminders Export to Markdown Journal python_modules
 
-AI LINK: https://chatgpt.com/share/33cb0247-8c45-4fd1-a1e5-f2c11ec114e5
+## Useful links:
+
+- AI Conversation of Creation: https://chatgpt.com/share/33cb0247-8c45-4fd1-a1e5-f2c11ec114e5
+- SQL DB Notes: https://gist.github.com/0xdevalias/ccc2b083ff58b52aa701462f2cfb3cc8#reminders-sqlite-coredata-models--tables
 
 
+
+## Tasks
+
+- [ ] Add a progress bar or at least a console log?
+
+### Bugs
+
+- [ ] skipNotesAlreadyImported doesn't work with multiple lists. Fix it.
 
 
 
 ### Maybe OBE:
+
+
+- [ ] Fix multi liist import. Currently it doesn't work as it should.
+
+I've slightly modified the main.py to test the functionality for mutliple list imports and it currently doesn't work as it should:
+
+
+What is the problem is that when the first list is imported, it of course of course also generates the section header if it doesn't exist already. And thus when the second list is about to be imported, the section header is found and this note import is skipped. 
+
+Could you maybe try to check before you write any markdown, before doing all the lists, if the section header exists or not. And if it exists, then skip the import of all reminders tasks from this day?
+
+
+
+
+---
 
 - [ ] OBE: Order the completed reminders by their completion date?
 
