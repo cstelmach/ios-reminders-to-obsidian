@@ -17,9 +17,9 @@ def write_task(
 
     if task.get("status") == "cancelled":
         checkbox = "[~]"
-    elif task["completionDate"]:
+    elif task.get("completionDate"):
         checkbox = "[x]"
-    elif subtasks and any(subtask["completionDate"] for subtask in subtasks):
+    elif subtasks and any(subtask.get("completionDate") for subtask in subtasks):
         checkbox = "[-]"
     else:
         checkbox = "[ ]"
@@ -29,9 +29,15 @@ def write_task(
     )
 
     # Only write additional details if the task is fully completed
-    if task["completionDate"]:
-        if task.get("body") and task["body"] != "missing value":
-            write_multiline_body(file, task["body"], prefix=prefix + "\t")
+    if task.get("completionDate"):
+        # Combine body and URL
+        body = task.get("body") or ""
+        url = task.get("url")
+        if url:
+            body = f"{body}\n{url}" if body else url
+
+        if body and body != "missing value":
+            write_multiline_body(file, body, prefix=prefix + "\t")
 
         formatted_creation_date = format_date(
             task["creationDate"], date_format_for_datetime, wrap_in_link
@@ -46,17 +52,14 @@ def write_task(
             f"{prefix}\t- created: {formatted_creation_date} {formatted_creation_time} -> completed: {formatted_completion_date} {formatted_completion_time}\n"
         )
 
-        if task.get("url"):
-            file.write(f"{prefix}\t- URL: {task['url']}\n")
-
         write_task_tags(file, task.get("tags", []), prefix=prefix)
 
     if subtasks:
         file.write(f"{prefix}\t- Subtasks:\n")
         for subtask in sorted(
-            subtasks, key=lambda x: x["completionDate"] or "9999-12-31"
+            subtasks, key=lambda x: x.get("completionDate") or "9999-12-31"
         ):
-            if subtask["completionDate"]:
+            if subtask.get("completionDate"):
                 write_task(
                     file,
                     subtask,

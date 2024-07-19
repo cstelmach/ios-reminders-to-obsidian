@@ -38,16 +38,10 @@ def get_completed_reminders_for_list(list_name, start_date=None, end_date=None):
                 ):
                     tags = get_tags_for_reminder(reminder.calendarItemIdentifier())
                     url = get_url_for_reminder(reminder.calendarItemIdentifier())
-                    notes = reminder.notes()
-                    if url:
-                        if notes:
-                            notes += f"\n{url}"
-                        else:
-                            notes = url
                     completed_reminders.append(
                         {
                             "name": reminder.title(),
-                            "body": notes,
+                            "body": reminder.notes(),
                             "creationDate": creation_date.strftime("%Y-%m-%d %H:%M:%S"),
                             "completionDate": completion_date.strftime(
                                 "%Y-%m-%d %H:%M:%S"
