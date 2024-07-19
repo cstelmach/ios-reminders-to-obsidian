@@ -45,7 +45,7 @@ def get_completed_reminders_for_list(list_name, start_date=None, end_date=None):
                             ),
                             "priority": reminder.priority(),
                             "UUID": reminder.calendarItemIdentifier(),
-                            "tags": tags,  # Add tags to the reminder
+                            "tags": tags,
                         }
                     )
 

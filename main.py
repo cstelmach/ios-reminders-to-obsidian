@@ -1,7 +1,10 @@
 from config import config
 from utils import get_date_range, update_cache
-from database import find_parent_reminder
-from reminders import get_all_reminder_lists, get_completed_reminders_for_list
+from reminders import (
+    get_all_reminder_lists,
+    get_completed_reminders_for_list,
+    find_parent_reminder,
+)
 from file_writer import write_reminders_to_markdown
 
 
@@ -11,7 +14,6 @@ def list_completed_reminders(test_lists=None):
         reminder_lists = get_all_reminder_lists()
         reminder_lists = [rl["title"] for rl in reminder_lists]
     else:
-        # if test_lists is a string, make it a list
         if isinstance(test_lists, str):
             test_lists = [test_lists]
         reminder_lists = test_lists
