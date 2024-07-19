@@ -1,12 +1,8 @@
-import json
 from config import config
-from reminders import (
-    get_all_reminder_lists,
-    get_completed_reminders_for_list,
-    find_parent_reminder,
-)
-from file_writer import write_reminders_to_markdown
 from utils import get_date_range, update_cache
+from database import find_parent_reminder
+from reminders import get_all_reminder_lists, get_completed_reminders_for_list
+from file_writer import write_reminders_to_markdown
 
 
 def list_completed_reminders(test_lists=None):
