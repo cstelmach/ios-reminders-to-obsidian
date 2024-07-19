@@ -102,3 +102,23 @@ def append_reminders(
         separator,
         wrap_in_link,
     )
+
+
+def write_task_body_and_dates(
+    file, task, date_format_for_datetime, time_format, wrap_in_link
+):
+    if task.get("body") and task["body"] != "missing value":
+        write_multiline_body(file, task["body"], prefix="\t")
+    formatted_creation_date = format_date(
+        task["creationDate"], date_format_for_datetime, wrap_in_link
+    )
+    formatted_creation_time = format_time(task["creationDate"], time_format)
+    formatted_completion_date = format_date(
+        task["completionDate"], date_format_for_datetime, wrap_in_link
+    )
+    formatted_completion_time = format_time(task["completionDate"], time_format)
+    file.write(
+        f"\t- created: {formatted_creation_date} {formatted_creation_time} -> completed: {formatted_completion_date} {formatted_completion_time}\n"
+    )
+    if task.get("url"):
+        file.write(f"\t- URL: {task['url']}\n")

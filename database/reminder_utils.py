@@ -31,6 +31,23 @@ def get_tags_for_reminder(reminder_uuid):
         conn.close()
 
 
+def get_url_for_reminder(reminder_uuid):
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor()
+        query = """
+        SELECT OBJ.ZURL 
+        FROM ZREMCDOBJECT as OBJ 
+        JOIN ZREMCDREMINDER as REM ON OBJ.ZREMINDER2 = REM.Z_PK 
+        WHERE REM.ZCKIDENTIFIER = ?
+        """
+        cursor.execute(query, (reminder_uuid,))
+        result = cursor.fetchone()
+        return result[0] if result else None
+    finally:
+        conn.close()
+
+
 def find_parent_reminder(reminder_uuid):
     conn = get_db_connection()
     try:
