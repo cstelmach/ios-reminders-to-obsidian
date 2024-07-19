@@ -1,6 +1,7 @@
 from .indentation_utils import write_multiline_text, write_multiline_body
 from processing.task_utils import write_task_tags
 from utils.datetime_formatter import format_date, format_time
+from config import config
 
 
 def write_task(
@@ -16,11 +17,11 @@ def write_task(
     prefix = "\t" if is_subtask else ""
 
     if task.get("status") == "cancelled":
-        checkbox = "[~]"
+        checkbox = config.get("cancelledCheckbox", "[~]")
     elif task.get("completionDate"):
         checkbox = "[x]"
     elif subtasks and any(subtask.get("completionDate") for subtask in subtasks):
-        checkbox = "[-]"
+        checkbox = config.get("partiallyCompletedCheckbox", "[-]")
     else:
         checkbox = "[ ]"
 
