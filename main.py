@@ -1,3 +1,4 @@
+import re
 from config import config
 from utils import get_date_range, update_cache
 from reminders import (
@@ -11,14 +12,14 @@ from markdown_ops import write_reminders_to_markdown
 def list_completed_reminders(test_lists=None):
     if not test_lists:
         print("Getting all reminder lists...")
-        reminder_lists = get_all_reminder_lists()
-        reminder_lists = [rl["title"] for rl in reminder_lists]
+        all_reminder_lists = get_all_reminder_lists()
+        reminder_lists = filter_reminder_lists(all_reminder_lists)
     else:
         if isinstance(test_lists, str):
             test_lists = [test_lists]
         reminder_lists = test_lists
 
-    print("All reminder lists:")
+    print("Reminder lists to import:")
     for reminder_list in reminder_lists:
         print(reminder_list)
 
@@ -52,6 +53,34 @@ def list_completed_reminders(test_lists=None):
     return all_completed_reminders
 
 
+def filter_reminder_lists(all_reminder_lists):
+    lists_to_import = config.get("listsToImport", [])
+
+    if not lists_to_import:
+        return []
+
+    filtered_lists = []
+    for reminder_list in all_reminder_lists:
+        list_title = reminder_list["title"]
+        for list_filter in lists_to_import:
+            if isinstance(list_filter, str):
+                if list_filter == list_title:
+                    filtered_lists.append(list_title)
+                    break
+            elif hasattr(list_filter, "match"):  # Check if it's a regex object
+                if list_filter.match(list_title):
+                    filtered_lists.append(list_title)
+                    break
+            else:
+                try:
+                    if re.match(list_filter, list_title):
+                        filtered_lists.append(list_title)
+                        break
+                except re.error:
+                    print(f"Invalid regex pattern: {list_filter}")
+
+    return filtered_lists
+
+
 if __name__ == "__main__":
-    test_lists = ["temp.crap", "temp.mayfly"]
-    completed_reminders = list_completed_reminders(test_lists=test_lists)
+    completed_reminders = list_completed_reminders()

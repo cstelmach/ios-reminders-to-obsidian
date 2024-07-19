@@ -12,5 +12,6 @@
   "wrapDateStringInInternalLink": true,
   "templateOverwritePath": "/Users/cs/Obsidian/_/slipbox/resources/templates/RT Journal-Day-Only_Completed_Tasks.md",
   "isCacheActive": false,
-  "skipNotesAlreadyImported": false
+  "skipNotesAlreadyImported": false,
+  "listsToImport": ["temp.crap", "temp.*"]
 }
