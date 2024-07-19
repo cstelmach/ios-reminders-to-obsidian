@@ -18,5 +18,9 @@
   "listsToOmit": [],
   "includeTodaysCompletedTasks": true,
   "partiallyCompletedCheckbox": "[-]",
-  "cancelledCheckbox": "[~]"
+  "cancelledCheckbox": "[~]",
+  "tagDependentCompletionKinds": {
+    "cancelled": ["OBE", "CANCELLED"],
+    "partiallyComplete": ["partiallyComplete", "TESTTAGSTRING1"]
+  }
 }

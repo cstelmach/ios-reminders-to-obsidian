@@ -4,6 +4,33 @@ from utils.datetime_formatter import format_date, format_time
 from config import config
 
 
+def get_checkbox_status(task, subtasks):
+    tag_dependent_completion_kinds = config.get("tagDependentCompletionKinds", {})
+    task_tags = set(task.get("tags", []))
+
+    # Check for cancelled tags first
+    cancelled_tags = set(tag_dependent_completion_kinds.get("cancelled", []))
+    if task_tags.intersection(cancelled_tags):
+        return config.get("cancelledCheckbox", "[~]")
+
+    # If not cancelled, check for partially complete tags
+    partially_complete_tags = set(
+        tag_dependent_completion_kinds.get("partiallyComplete", [])
+    )
+    if task_tags.intersection(partially_complete_tags):
+        return config.get("partiallyCompletedCheckbox", "[-]")
+
+    # If no tag-dependent status, use the default logic
+    if task.get("status") == "cancelled":
+        return config.get("cancelledCheckbox", "[~]")
+    elif task.get("completionDate"):
+        return "[x]"
+    elif subtasks and any(subtask.get("completionDate") for subtask in subtasks):
+        return config.get("partiallyCompletedCheckbox", "[-]")
+    else:
+        return "[ ]"
+
+
 def write_task(
     file,
     task,
@@ -16,14 +43,7 @@ def write_task(
 ):
     prefix = "\t" if is_subtask else ""
 
-    if task.get("status") == "cancelled":
-        checkbox = config.get("cancelledCheckbox", "[~]")
-    elif task.get("completionDate"):
-        checkbox = "[x]"
-    elif subtasks and any(subtask.get("completionDate") for subtask in subtasks):
-        checkbox = config.get("partiallyCompletedCheckbox", "[-]")
-    else:
-        checkbox = "[ ]"
+    checkbox = get_checkbox_status(task, subtasks)
 
     write_multiline_text(
         file, task["name"], prefix=prefix, initial_prefix=f"- {checkbox} "
