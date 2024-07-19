@@ -1,6 +1,6 @@
 from .indentation_utils import write_multiline_text, write_multiline_body
 from processing.task_utils import write_task_tags
-from utils.datetime_formatter import format_date, format_time
+from .task_datetime_formatter import format_task_dates
 from config import config
 
 
@@ -60,18 +60,10 @@ def write_task(
         if body and body != "missing value":
             write_multiline_body(file, body, prefix=prefix + "\t")
 
-        formatted_creation_date = format_date(
-            task["creationDate"], date_format_for_datetime, wrap_in_link
+        date_string = format_task_dates(
+            task, date_format_for_datetime, time_format, wrap_in_link
         )
-        formatted_creation_time = format_time(task["creationDate"], time_format)
-        formatted_completion_date = format_date(
-            task["completionDate"], date_format_for_datetime, wrap_in_link
-        )
-        formatted_completion_time = format_time(task["completionDate"], time_format)
-
-        file.write(
-            f"{prefix}\t- created: {formatted_creation_date} {formatted_creation_time} -> completed: {formatted_completion_date} {formatted_completion_time}\n"
-        )
+        file.write(f"{prefix}\t- {date_string}\n")
 
         write_task_tags(file, task.get("tags", []), prefix=prefix)
 
