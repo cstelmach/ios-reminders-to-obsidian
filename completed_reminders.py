@@ -1,7 +1,8 @@
 from Foundation import NSDate
 from EventKit import EKEventStore, EKEntityTypeReminder
 from datetime import datetime, date
-from reminder_tags import get_tags_for_reminder  # Import the new function
+from database import get_tags_for_reminder
+
 
 def get_completed_reminders_for_list(list_name, start_date=None, end_date=None):
     store = EKEventStore.alloc().init()
@@ -29,7 +30,7 @@ def get_completed_reminders_for_list(list_name, start_date=None, end_date=None):
                 if (start_date is None or completion_date >= start_date) and (
                     end_date is None or completion_date <= end_date
                 ):
-                    tags = get_tags_for_reminder(reminder.calendarItemIdentifier())  # Get tags
+                    tags = get_tags_for_reminder(reminder.calendarItemIdentifier())
                     completed_reminders.append(
                         {
                             "name": reminder.title(),
@@ -44,7 +45,7 @@ def get_completed_reminders_for_list(list_name, start_date=None, end_date=None):
                             ),
                             "priority": reminder.priority(),
                             "UUID": reminder.calendarItemIdentifier(),
-                            "tags": tags  # Add tags to the reminder
+                            "tags": tags,  # Add tags to the reminder
                         }
                     )
 

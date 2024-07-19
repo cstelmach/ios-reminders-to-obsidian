@@ -1,5 +1,4 @@
-# parent_reminder.py
-from db_utils import get_db_connection
+from database import get_db_connection
 
 
 def find_parent_reminder(reminder_uuid):

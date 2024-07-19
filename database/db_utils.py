@@ -1,7 +1,7 @@
-# db_utils.py
 import sqlite3
 import os
 import glob
+
 
 def get_db_connection():
     db_glob_path = os.path.expanduser(

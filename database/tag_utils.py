@@ -1,5 +1,5 @@
 # tags_utils.py
-from db_utils import get_db_connection
+from ios_reminders_to_markdown_journal.database.db_utils import get_db_connection
 
 
 def get_all_tags():

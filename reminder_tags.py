@@ -1,5 +1,5 @@
 # reminder_tags.py
-from db_utils import get_db_connection
+from ios_reminders_to_markdown_journal.database.db_utils import get_db_connection
 
 
 def get_tags_for_reminder(reminder_uuid):
