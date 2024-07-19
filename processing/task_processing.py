@@ -1,7 +1,27 @@
+from .subtasks_utils import append_subtasks
+from .task_utils import write_task_tags
+from markdown_ops.indentation_utils import write_multiline_text, write_multiline_body
 from utils.datetime_formatter import format_date, format_time
-from indentation_utils import write_multiline_text, write_multiline_body
-from subtasks_utils import append_subtasks
-from task_utils import write_task_tags  # Import the new function
+
+
+def separate_tasks(reminders):
+    main_tasks = {
+        reminder["UUID"]: reminder
+        for reminder in reminders
+        if not reminder.get("parent_uuid")
+    }
+    child_tasks = [reminder for reminder in reminders if reminder.get("parent_uuid")]
+    return main_tasks, child_tasks
+
+
+def group_child_tasks_by_parent(child_tasks):
+    child_tasks_by_parent_uuid = {}
+    for task in child_tasks:
+        parent_uuid = task["parent_uuid"]
+        if parent_uuid not in child_tasks_by_parent_uuid:
+            child_tasks_by_parent_uuid[parent_uuid] = []
+        child_tasks_by_parent_uuid[parent_uuid].append(task)
+    return child_tasks_by_parent_uuid
 
 
 def process_main_tasks(
@@ -33,7 +53,6 @@ def process_main_tasks(
                     wrap_in_link,
                 )
 
-            # Write tags for parent task
             write_task_tags(file, parent_task.get("tags", []))
 
             append_subtasks(
@@ -47,7 +66,6 @@ def process_main_tasks(
             )
             file.write("\n")
         else:
-            # If the parent task has no subtasks, just write the task
             parent_completed = parent_task["completionDate"] is not None
             parent_checkbox = "[x]" if parent_completed else "[-]"
             write_multiline_text(
@@ -64,9 +82,36 @@ def process_main_tasks(
                 wrap_in_link,
             )
 
-            # Write tags for parent task
             write_task_tags(file, parent_task.get("tags", []))
 
+            file.write("\n")
+
+
+def process_child_tasks_without_parent(
+    file,
+    child_tasks_by_parent_uuid,
+    main_tasks,
+    date_format_for_datetime,
+    time_format,
+    separator,
+    wrap_in_link,
+):
+    for parent_uuid, subtasks in child_tasks_by_parent_uuid.items():
+        if parent_uuid not in main_tasks:
+            parent_checkbox = "[-]"
+            parent_title = subtasks[0]["parent_title"]
+            write_multiline_text(
+                file, parent_title, prefix="", initial_prefix=f"- {parent_checkbox} "
+            )
+            append_subtasks(
+                file,
+                subtasks,
+                date_format_for_datetime,
+                time_format,
+                separator,
+                wrap_in_link,
+                "\t",
+            )
             file.write("\n")
 
 
@@ -78,7 +123,6 @@ def write_task_body_and_dates(
     formatted_creation_date = format_date(
         task["creationDate"], date_format_for_datetime, wrap_in_link
     )
-
     formatted_creation_time = format_time(task["creationDate"], time_format)
     formatted_completion_date = format_date(
         task["completionDate"], date_format_for_datetime, wrap_in_link

@@ -1,8 +1,7 @@
 import os
 import json
 from config import config
-from header_utils import write_section_header
-from append_reminders import append_reminders
+from .header_utils import write_section_header
 
 
 def get_paths_and_template():
@@ -48,23 +47,3 @@ def create_file_if_not_exists(filename, template_path):
                     file.write(template_file.read())
             else:
                 file.write("\n\n")
-
-
-def append_reminders_to_file(filename, reminders, section_header_exists, reminder_list):
-    with open(filename, "a") as file:
-        if not section_header_exists:
-            write_section_header(
-                file, config["sectionHeader"], config["sectionHeaderLevel"]
-            )
-        else:
-            file.write("\n")
-        append_reminders(
-            file,
-            reminders,
-            config.get("listHeaderLevel", 3),
-            reminder_list,
-            config["dateFormat"],
-            config["timeFormat"],
-            config["dateTimeSeparator"],
-            config.get("wrapDateStringInInternalLink", False),
-        )

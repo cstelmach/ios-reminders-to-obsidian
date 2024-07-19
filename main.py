@@ -5,7 +5,7 @@ from reminders import (
     get_completed_reminders_for_list,
     find_parent_reminder,
 )
-from file_writer import write_reminders_to_markdown
+from markdown_ops import write_reminders_to_markdown
 
 
 def list_completed_reminders(test_lists=None):

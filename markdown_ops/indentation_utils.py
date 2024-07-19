@@ -1,7 +1,6 @@
 def write_multiline_text(file, text, prefix="", initial_prefix="- [x] "):
     lines = text.split("\n")
     for i, line in enumerate(lines):
-        # If the line is empty or just spaces, replace it with "_"
         if line.isspace() or not line:
             line = "_"
         if i == 0:
