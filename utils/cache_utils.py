@@ -34,10 +34,15 @@ def get_date_range():
             ).date() + timedelta(days=1)
         else:
             start_date = None  # Indicates that all reminders should be fetched
-    end_date = (datetime.now() - timedelta(days=1)).date()
+
+    if config["includeTodaysCompletedTasks"]:
+        end_date = datetime.now().date()
+    else:
+        end_date = (datetime.now() - timedelta(days=1)).date()
+
     return start_date, end_date
 
 
 def update_cache():
-    yesterday = (datetime.now() - timedelta(days=1)).date()
-    save_cache(yesterday)
+    today = datetime.now().date()
+    save_cache(today)

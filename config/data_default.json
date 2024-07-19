@@ -15,5 +15,6 @@
   "skipNotesAlreadyImported": true,
   "listsToImport": [],
   "importButAllOverwrite": false,
-  "listsToOmit": []
+  "listsToOmit": [],
+  "includeTodaysCompletedTasks": false
 }
