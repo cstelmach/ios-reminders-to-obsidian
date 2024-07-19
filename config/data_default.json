@@ -23,5 +23,7 @@
     "cancelled": ["OBE", "CANCELLED"],
     "partiallyComplete": ["partiallyComplete"]
   },
-  "useMetadataFormattingForDatetimes": false
+  "useMetadataFormattingForDatetimes": false,
+  "manualDatabaseFolderPath": null,
+  "useDatabaseFunctions": true
 }

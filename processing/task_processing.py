@@ -2,9 +2,13 @@ from .subtasks_utils import append_subtasks
 from .task_utils import write_task_tags
 from markdown_ops.indentation_utils import write_multiline_text, write_multiline_body
 from utils.datetime_formatter import format_date, format_time
+from config import config
 
 
 def separate_tasks(reminders):
+    if not config.get("useDatabaseFunctions", True):
+        return reminders, []
+
     main_tasks = {
         reminder["UUID"]: reminder
         for reminder in reminders
@@ -15,6 +19,9 @@ def separate_tasks(reminders):
 
 
 def group_child_tasks_by_parent(child_tasks):
+    if not config.get("useDatabaseFunctions", True):
+        return {}
+
     child_tasks_by_parent_uuid = {}
     for task in child_tasks:
         parent_uuid = task["parent_uuid"]
@@ -33,18 +40,66 @@ def process_main_tasks(
     separator,
     wrap_in_link,
 ):
-    for parent_uuid, parent_task in main_tasks.items():
-        if parent_uuid in child_tasks_by_parent_uuid:
-            parent_completed = parent_task["completionDate"] is not None
-            parent_checkbox = "[x]" if parent_completed else "[-]"
+    use_database = config.get("useDatabaseFunctions", True)
+
+    if not use_database:
+        for task in main_tasks:
             write_multiline_text(
                 file,
-                parent_task["name"],
+                task["name"],
                 prefix="",
-                initial_prefix=f"- {parent_checkbox} ",
+                initial_prefix="- [x] ",
             )
+            write_task_body_and_dates(
+                file,
+                task,
+                date_format_for_datetime,
+                time_format,
+                wrap_in_link,
+            )
+            file.write("\n")
+    else:
+        for parent_uuid, parent_task in main_tasks.items():
+            if parent_uuid in child_tasks_by_parent_uuid:
+                parent_completed = parent_task["completionDate"] is not None
+                parent_checkbox = "[x]" if parent_completed else "[-]"
+                write_multiline_text(
+                    file,
+                    parent_task["name"],
+                    prefix="",
+                    initial_prefix=f"- {parent_checkbox} ",
+                )
 
-            if parent_completed:
+                if parent_completed:
+                    write_task_body_and_dates(
+                        file,
+                        parent_task,
+                        date_format_for_datetime,
+                        time_format,
+                        wrap_in_link,
+                    )
+
+                write_task_tags(file, parent_task.get("tags", []))
+
+                append_subtasks(
+                    file,
+                    child_tasks_by_parent_uuid[parent_uuid],
+                    date_format_for_datetime,
+                    time_format,
+                    separator,
+                    wrap_in_link,
+                    "\t",
+                )
+                file.write("\n")
+            else:
+                parent_completed = parent_task["completionDate"] is not None
+                parent_checkbox = "[x]" if parent_completed else "[-]"
+                write_multiline_text(
+                    file,
+                    parent_task["name"],
+                    prefix="",
+                    initial_prefix=f"- {parent_checkbox} ",
+                )
                 write_task_body_and_dates(
                     file,
                     parent_task,
@@ -53,38 +108,9 @@ def process_main_tasks(
                     wrap_in_link,
                 )
 
-            write_task_tags(file, parent_task.get("tags", []))
+                write_task_tags(file, parent_task.get("tags", []))
 
-            append_subtasks(
-                file,
-                child_tasks_by_parent_uuid[parent_uuid],
-                date_format_for_datetime,
-                time_format,
-                separator,
-                wrap_in_link,
-                "\t",
-            )
-            file.write("\n")
-        else:
-            parent_completed = parent_task["completionDate"] is not None
-            parent_checkbox = "[x]" if parent_completed else "[-]"
-            write_multiline_text(
-                file,
-                parent_task["name"],
-                prefix="",
-                initial_prefix=f"- {parent_checkbox} ",
-            )
-            write_task_body_and_dates(
-                file,
-                parent_task,
-                date_format_for_datetime,
-                time_format,
-                wrap_in_link,
-            )
-
-            write_task_tags(file, parent_task.get("tags", []))
-
-            file.write("\n")
+                file.write("\n")
 
 
 def process_child_tasks_without_parent(
@@ -96,6 +122,9 @@ def process_child_tasks_without_parent(
     separator,
     wrap_in_link,
 ):
+    if not config.get("useDatabaseFunctions", True):
+        return
+
     for parent_uuid, subtasks in child_tasks_by_parent_uuid.items():
         if parent_uuid not in main_tasks:
             parent_checkbox = "[-]"

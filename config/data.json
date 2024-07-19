@@ -23,5 +23,7 @@
     "cancelled": ["OBE", "CANCELLED"],
     "partiallyComplete": ["partiallyComplete"]
   },
-  "useMetadataFormattingForDatetimes": true
+  "useMetadataFormattingForDatetimes": true,
+  "manualDatabaseFolderPath": "/Users/cs/Library/Group Containers/group.com.apple.reminders/Container_v1/Stores/",
+  "useDatabaseFunctions": true
 }
