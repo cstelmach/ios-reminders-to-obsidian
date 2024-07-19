@@ -1,6 +1,6 @@
 from Foundation import NSDate
 from EventKit import EKEventStore, EKEntityTypeReminder
-from datetime import datetime, date
+from datetime import datetime
 from database import get_tags_for_reminder, get_url_for_reminder
 
 
@@ -23,12 +23,18 @@ def get_completed_reminders_for_list(list_name, start_date=None, end_date=None):
     for reminder in reminders:
         if reminder.isCompleted():
             completion_date = reminder.completionDate()
+            creation_date = reminder.creationDate()
+
             if completion_date:
-                completion_date = datetime.strptime(
-                    completion_date.description(), "%Y-%m-%d %H:%M:%S %z"
-                ).date()
-                if (start_date is None or completion_date >= start_date) and (
-                    end_date is None or completion_date <= end_date
+                completion_date = datetime.fromtimestamp(
+                    completion_date.timeIntervalSince1970()
+                )
+                creation_date = datetime.fromtimestamp(
+                    creation_date.timeIntervalSince1970()
+                )
+
+                if (start_date is None or completion_date.date() >= start_date) and (
+                    end_date is None or completion_date.date() <= end_date
                 ):
                     tags = get_tags_for_reminder(reminder.calendarItemIdentifier())
                     url = get_url_for_reminder(reminder.calendarItemIdentifier())
@@ -42,11 +48,15 @@ def get_completed_reminders_for_list(list_name, start_date=None, end_date=None):
                         {
                             "name": reminder.title(),
                             "body": notes,
-                            "creationDate": reminder.creationDate().description(),
-                            "completionDate": completion_date.strftime("%Y-%m-%d"),
+                            "creationDate": creation_date.strftime("%Y-%m-%d %H:%M:%S"),
+                            "completionDate": completion_date.strftime(
+                                "%Y-%m-%d %H:%M:%S"
+                            ),
                             "allDayDueDate": reminder.dueDateAllDay(),
                             "dueDate": (
-                                reminder.dueDate().description()
+                                datetime.fromtimestamp(
+                                    reminder.dueDate().timeIntervalSince1970()
+                                ).strftime("%Y-%m-%d %H:%M:%S")
                                 if reminder.dueDate()
                                 else None
                             ),

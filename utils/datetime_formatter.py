@@ -6,11 +6,7 @@ def format_date(date_input, date_format, wrap_in_link):
         return ""
 
     if isinstance(date_input, str):
-        try:
-            date_obj = datetime.fromisoformat(date_input)
-        except ValueError:
-            # If it's not ISO format, try parsing it as a timestamp
-            date_obj = datetime.fromtimestamp(float(date_input))
+        date_obj = datetime.strptime(date_input, "%Y-%m-%d %H:%M:%S")
     elif isinstance(date_input, float):
         date_obj = datetime.fromtimestamp(date_input)
     elif isinstance(date_input, datetime):
@@ -33,11 +29,7 @@ def format_time(date_input, time_format):
         return ""
 
     if isinstance(date_input, str):
-        try:
-            date_obj = datetime.fromisoformat(date_input)
-        except ValueError:
-            # If it's not ISO format, try parsing it as a timestamp
-            date_obj = datetime.fromtimestamp(float(date_input))
+        date_obj = datetime.strptime(date_input, "%Y-%m-%d %H:%M:%S")
     elif isinstance(date_input, float):
         date_obj = datetime.fromtimestamp(date_input)
     elif isinstance(date_input, datetime):

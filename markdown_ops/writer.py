@@ -42,7 +42,9 @@ def group_reminders_by_date(completed_reminders):
     for reminder in completed_reminders:
         completion_date_str = reminder["completionDate"]
         if completion_date_str and completion_date_str != "missing value":
-            completion_date = datetime.strptime(completion_date_str, "%Y-%m-%d").date()
+            completion_date = datetime.strptime(
+                completion_date_str, "%Y-%m-%d %H:%M:%S"
+            ).date()
             if completion_date not in reminders_by_date:
                 reminders_by_date[completion_date] = []
             reminders_by_date[completion_date].append(reminder)
@@ -107,6 +109,8 @@ def append_reminders(
 def write_task_body_and_dates(
     file, task, date_format_for_datetime, time_format, wrap_in_link
 ):
+    from utils.datetime_formatter import format_date, format_time
+
     if task.get("body") and task["body"] != "missing value":
         write_multiline_body(file, task["body"], prefix="\t")
     formatted_creation_date = format_date(
@@ -122,3 +126,12 @@ def write_task_body_and_dates(
     )
     if task.get("url"):
         file.write(f"\t- URL: {task['url']}\n")
+
+
+def write_multiline_body(file, body, prefix=""):
+    lines = body.split("\n")
+    for i, line in enumerate(lines):
+        if i == 0:
+            file.write(f"{prefix}- {line}\n")
+        else:
+            file.write(f"{prefix}  {line}\n")
