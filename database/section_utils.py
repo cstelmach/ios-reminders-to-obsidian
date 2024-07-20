@@ -82,11 +82,14 @@ def get_section_for_reminder(reminder_uuid, list_id):
 
 def add_section_to_reminders(reminders, list_id):
     for reminder in reminders:
-        section = get_section_for_reminder(reminder["UUID"], list_id)
-        reminder["section"] = section
-        if section:
-            tags_to_add = get_tags_for_section(section)
-            reminder["tags"] = list(set(reminder.get("tags", []) + tags_to_add))
+        if not reminder.get(
+            "parent_uuid"
+        ):  # Only add section to main tasks and parent tasks
+            section = get_section_for_reminder(reminder["UUID"], list_id)
+            reminder["section"] = section
+            if section:
+                tags_to_add = get_tags_for_section(section)
+                reminder["tags"] = list(set(reminder.get("tags", []) + tags_to_add))
     return reminders
 
 

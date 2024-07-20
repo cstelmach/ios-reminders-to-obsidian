@@ -53,8 +53,8 @@ def write_task(
         file, task["name"], prefix=prefix, initial_prefix=f"- {checkbox} "
     )
 
-    # Only write additional details if the task is fully completed
-    if task.get("completionDate"):
+    # Only write additional details if the task is fully completed or is a parent task with completed subtasks
+    if task.get("completionDate") or (not is_subtask and subtasks):
         # Combine body and URL
         body = task.get("body") or ""
         url = task.get("url")
@@ -69,8 +69,12 @@ def write_task(
         for prop in properties:
             file.write(f"{prefix}\t- {prop}\n")
 
-        # Write section information if available and not hidden
-        if task.get("section") and not should_hide_section(task["section"]):
+        # Write section information if available and not hidden (only for main tasks and parent tasks)
+        if (
+            not is_subtask
+            and task.get("section")
+            and not should_hide_section(task["section"])
+        ):
             file.write(f"{prefix}\t- section: {task['section']}\n")
 
         # Write date string (creation/due/completion)

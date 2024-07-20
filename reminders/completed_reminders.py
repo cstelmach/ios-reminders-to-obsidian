@@ -7,6 +7,7 @@ from database import (
     get_tags_for_reminder,
     get_url_for_reminder,
     add_section_to_reminders,
+    find_parent_reminder,
 )
 from config import config
 
@@ -45,34 +46,28 @@ def get_completed_reminders_for_list(list_name, start_date=None, end_date=None):
                 if (start_date is None or completion_date.date() >= start_date) and (
                     end_date is None or completion_date.date() <= end_date
                 ):
-                    reminder_data = {
-                        "name": reminder.title(),
-                        "body": reminder.notes(),
-                        "creationDate": creation_date.strftime("%Y-%m-%d %H:%M:%S"),
-                        "completionDate": completion_date.strftime("%Y-%m-%d %H:%M:%S"),
-                        "allDayDueDate": reminder.dueDateAllDay(),
-                        "dueDate": (
-                            datetime.fromtimestamp(
-                                reminder.dueDate().timeIntervalSince1970()
-                            ).strftime("%Y-%m-%d %H:%M:%S")
-                            if reminder.dueDate()
-                            else None
-                        ),
-                        "priority": reminder.priority(),
-                        "UUID": reminder.calendarItemIdentifier(),
-                    }
+                    reminder_data = create_reminder_data(
+                        reminder, completion_date, creation_date, use_database
+                    )
+                    completed_reminders.append(reminder_data)
 
-                    if use_database:
-                        reminder_data["tags"] = get_tags_for_reminder(
-                            reminder.calendarItemIdentifier()
-                        )
-                        reminder_data["url"] = get_url_for_reminder(
-                            reminder.calendarItemIdentifier()
-                        )
-                    else:
-                        reminder_data["tags"] = []
-                        reminder_data["url"] = None
-
+    # Now, let's find uncompleted parent tasks with completed subtasks
+    for reminder in reminders:
+        if not reminder.isCompleted():
+            parent = find_parent_reminder(reminder.calendarItemIdentifier())
+            if parent is None:  # This is a potential parent task
+                # Check if this uncompleted task has any completed subtasks
+                has_completed_subtasks = any(
+                    sub.get("parent_uuid") == reminder.calendarItemIdentifier()
+                    for sub in completed_reminders
+                )
+                if has_completed_subtasks:
+                    creation_date = datetime.fromtimestamp(
+                        reminder.creationDate().timeIntervalSince1970()
+                    )
+                    reminder_data = create_reminder_data(
+                        reminder, None, creation_date, use_database
+                    )
                     completed_reminders.append(reminder_data)
 
     if use_database:
@@ -81,3 +76,35 @@ def get_completed_reminders_for_list(list_name, start_date=None, end_date=None):
         )
 
     return completed_reminders
+
+
+def create_reminder_data(reminder, completion_date, creation_date, use_database):
+    reminder_data = {
+        "name": reminder.title(),
+        "body": reminder.notes(),
+        "creationDate": (
+            creation_date.strftime("%Y-%m-%d %H:%M:%S") if creation_date else None
+        ),
+        "completionDate": (
+            completion_date.strftime("%Y-%m-%d %H:%M:%S") if completion_date else None
+        ),
+        "allDayDueDate": reminder.dueDateAllDay(),
+        "dueDate": (
+            datetime.fromtimestamp(reminder.dueDate().timeIntervalSince1970()).strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
+            if reminder.dueDate()
+            else None
+        ),
+        "priority": reminder.priority(),
+        "UUID": reminder.calendarItemIdentifier(),
+    }
+
+    if use_database:
+        reminder_data["tags"] = get_tags_for_reminder(reminder.calendarItemIdentifier())
+        reminder_data["url"] = get_url_for_reminder(reminder.calendarItemIdentifier())
+    else:
+        reminder_data["tags"] = []
+        reminder_data["url"] = None
+
+    return reminder_data
