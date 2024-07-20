@@ -1,7 +1,13 @@
+# ios_reminders_to_markdown_journal/reminders/completed_reminders.py
+
 from Foundation import NSDate
 from EventKit import EKEventStore, EKEntityTypeReminder
 from datetime import datetime
-from database import get_tags_for_reminder, get_url_for_reminder
+from database import (
+    get_tags_for_reminder,
+    get_url_for_reminder,
+    add_section_to_reminders,
+)
 from config import config
 
 
@@ -68,5 +74,10 @@ def get_completed_reminders_for_list(list_name, start_date=None, end_date=None):
                         reminder_data["url"] = None
 
                     completed_reminders.append(reminder_data)
+
+    if use_database:
+        completed_reminders = add_section_to_reminders(
+            completed_reminders, target_calendar.calendarIdentifier()
+        )
 
     return completed_reminders

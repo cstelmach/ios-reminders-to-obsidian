@@ -1,3 +1,5 @@
+# ios_reminders_to_markdown_journal/markdown_ops/task_writer.py
+
 from .indentation_utils import write_multiline_text, write_multiline_body
 from processing.task_utils import write_task_tags
 from .task_datetime_formatter import format_task_dates
@@ -65,6 +67,10 @@ def write_task(
         properties = format_task_properties(task)
         for prop in properties:
             file.write(f"{prefix}\t- {prop}\n")
+
+        # Write section information if available
+        if task.get("section"):
+            file.write(f"{prefix}\t- section: {task['section']}\n")
 
         # Write date string (creation/due/completion)
         date_string = format_task_dates(
