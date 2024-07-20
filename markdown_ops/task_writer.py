@@ -10,21 +10,37 @@ from database.section_utils import should_hide_section
 
 def get_checkbox_status(task, subtasks):
     tag_dependent_completion_kinds = config.get("tagDependentCompletionKinds", {})
+    section_dependent_completion_kinds = config.get(
+        "sectionDependentCompletionKinds", {}
+    )
     task_tags = set(task.get("tags", []))
+    task_section = task.get("section", "")
 
-    # Check for cancelled tags first
+    # Check for cancelled tags first (highest priority)
     cancelled_tags = set(tag_dependent_completion_kinds.get("cancelled", []))
     if task_tags.intersection(cancelled_tags):
         return config.get("cancelledCheckbox", "[~]")
 
-    # If not cancelled, check for partially complete tags
+    # Check for partially complete tags
     partially_complete_tags = set(
         tag_dependent_completion_kinds.get("partiallyComplete", [])
     )
     if task_tags.intersection(partially_complete_tags):
         return config.get("partiallyCompletedCheckbox", "[-]")
 
-    # If no tag-dependent status, use the default logic
+    # Check for cancelled sections
+    cancelled_sections = set(section_dependent_completion_kinds.get("cancelled", []))
+    if task_section in cancelled_sections:
+        return config.get("cancelledCheckbox", "[~]")
+
+    # Check for partially complete sections
+    partially_complete_sections = set(
+        section_dependent_completion_kinds.get("partiallyComplete", [])
+    )
+    if task_section in partially_complete_sections:
+        return config.get("partiallyCompletedCheckbox", "[-]")
+
+    # If no tag or section dependent status, use the default logic
     if task.get("status") == "cancelled":
         return config.get("cancelledCheckbox", "[~]")
     elif task.get("completionDate"):

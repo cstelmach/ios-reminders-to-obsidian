@@ -35,6 +35,10 @@
     "tagDependentCompletionKinds": {
       "cancelled": ["OBE", "CANCELLED"],
       "partiallyComplete": ["partiallyComplete"]
+    },
+    "sectionDependentCompletionKinds": {
+      "cancelled": [],
+      "partiallyComplete": []
     }
   },
   "formatting": {
