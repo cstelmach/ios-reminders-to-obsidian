@@ -16,6 +16,7 @@
   "listsToImport": ["temp.*"],
   "importButAllOverwrite": false,
   "listsToOmit": [],
+  "sectionsToHide": [".*OBE.*", ".*_hidden"],
   "includeTodaysCompletedTasks": true,
   "partiallyCompletedCheckbox": "[-]",
   "cancelledCheckbox": "[~]",

@@ -16,6 +16,7 @@
   "listsToImport": [],
   "importButAllOverwrite": false,
   "listsToOmit": [],
+  "sectionsToHide": [],
   "includeTodaysCompletedTasks": false,
   "partiallyCompletedCheckbox": "[-]",
   "cancelledCheckbox": "[~]",

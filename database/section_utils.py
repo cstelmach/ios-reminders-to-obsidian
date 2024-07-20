@@ -1,7 +1,9 @@
 # ios_reminders_to_markdown_journal/database/section_utils.py
 
 import json
+import re
 from .db_utils import get_db_connection
+from config import config
 
 
 def get_sections_for_list(list_id):
@@ -28,7 +30,11 @@ def get_sections_for_list(list_id):
         sections = cursor.fetchall()
 
         # Create a dictionary of section_id: section_name
-        section_dict = {section[0]: section[1] for section in sections}
+        section_dict = {
+            section[0]: section[1]
+            for section in sections
+            if not should_hide_section(section[1])
+        }
 
         return section_dict
     finally:
@@ -78,3 +84,12 @@ def add_section_to_reminders(reminders, list_id):
     for reminder in reminders:
         reminder["section"] = get_section_for_reminder(reminder["UUID"], list_id)
     return reminders
+
+
+def should_hide_section(section_name):
+    sections_to_hide = config.get("sectionsToHide", [])
+    return any(
+        (isinstance(pattern, str) and pattern == section_name)
+        or (hasattr(pattern, "match") and pattern.match(section_name))
+        for pattern in sections_to_hide
+    )

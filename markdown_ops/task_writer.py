@@ -5,6 +5,7 @@ from processing.task_utils import write_task_tags
 from .task_datetime_formatter import format_task_dates
 from .task_property_formatter import format_task_properties
 from config import config
+from database.section_utils import should_hide_section
 
 
 def get_checkbox_status(task, subtasks):
@@ -68,8 +69,8 @@ def write_task(
         for prop in properties:
             file.write(f"{prefix}\t- {prop}\n")
 
-        # Write section information if available
-        if task.get("section"):
+        # Write section information if available and not hidden
+        if task.get("section") and not should_hide_section(task["section"]):
             file.write(f"{prefix}\t- section: {task['section']}\n")
 
         # Write date string (creation/due/completion)
