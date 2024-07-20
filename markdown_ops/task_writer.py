@@ -88,9 +88,10 @@ def write_task(
         write_task_tags(file, task.get("tags", []), prefix=prefix)
 
     if subtasks:
-        file.write(f"{prefix}\t- Subtasks:\n")
-        for subtask in sorted(
-            subtasks, key=lambda x: x.get("completionDate") or "9999-12-31"
+        file.write(f"{prefix}\t- Subtasks:\n\n")
+        
+        for index, subtask in enumerate(
+            sorted(subtasks, key=lambda x: x.get("completionDate") or "9999-12-31")
         ):
             if subtask.get("completionDate"):
                 write_task(
@@ -103,5 +104,9 @@ def write_task(
                     wrap_in_link,
                     is_subtask=True,
                 )
+                # Don't print a new line after the last subtask
+                if index < len(subtasks) - 1:
+                    file.write("\n")
 
-    file.write("\n")
+    if not is_subtask:
+        file.write("\n")  # Add a new line after the main task

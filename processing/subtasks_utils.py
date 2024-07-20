@@ -12,7 +12,7 @@ def append_subtasks(
     wrap_in_link,
     indentation,
 ):
-    file.write(f"{indentation}- Subtasks:\n")
+    file.write(f"{indentation}- Subtasks:\n\n")
     for subtask in subtasks:
         write_multiline_text(
             file, subtask["name"], prefix=indentation + "\t", initial_prefix="- [x] "
