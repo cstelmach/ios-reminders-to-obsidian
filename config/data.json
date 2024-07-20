@@ -9,7 +9,9 @@
     "useDatabaseFunctions": true
   },
   "export": {
-    "isCacheActive": false
+    "isCacheActive": false,
+    "exportToCSV": true,
+    "csvExportFolderPath": "/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal"
   },
   "sections": {
     "sectionsToHide": ["Hidden Section", ".*_hidden"],

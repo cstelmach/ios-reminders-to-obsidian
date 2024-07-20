@@ -9,7 +9,9 @@
     "useDatabaseFunctions": true
   },
   "export": {
-    "isCacheActive": true
+    "isCacheActive": true,
+    "exportToCSV": false,
+    "csvExportFolderPath": ""
   },
   "sections": {
     "sectionsToHide": [],

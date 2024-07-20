@@ -7,6 +7,7 @@ from reminders import (
     filter_reminder_lists,
 )
 from markdown_ops import write_reminders_to_markdown
+from csv_export import export_reminders_to_csv
 
 
 def list_completed_reminders(test_lists=None):
@@ -46,6 +47,10 @@ def list_completed_reminders(test_lists=None):
 
         # Write to Markdown file
         write_reminders_to_markdown(reminder_list, completed_reminders)
+
+        # Export to CSV if enabled
+        if config["exportToCSV"]:
+            export_reminders_to_csv(completed_reminders)
 
     if config["isCacheActive"]:
         update_cache()

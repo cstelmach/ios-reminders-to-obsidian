@@ -1,0 +1,67 @@
+import csv
+import os
+from datetime import datetime
+from config import config
+
+
+def export_reminders_to_csv(completed_reminders):
+    if not config["exportToCSV"]:
+        return
+
+    csv_folder_path = config["csvExportFolderPath"]
+    if not csv_folder_path:
+        raise ValueError("CSV export folder path is not defined in the configuration.")
+
+    os.makedirs(csv_folder_path, exist_ok=True)
+
+    reminders_by_date = group_reminders_by_date(completed_reminders)
+
+    for date, reminders in reminders_by_date.items():
+        csv_file_path = os.path.join(
+            csv_folder_path, f"{date.strftime('%Y-%m-%d')}.csv"
+        )
+        file_exists = os.path.isfile(csv_file_path)
+
+        with open(csv_file_path, "a", newline="", encoding="utf-8") as csvfile:
+            fieldnames = get_fieldnames(reminders)
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+            if not file_exists:
+                writer.writeheader()
+
+            for reminder in reminders:
+                writer.writerow(format_reminder_for_csv(reminder))
+
+
+def group_reminders_by_date(completed_reminders):
+    reminders_by_date = {}
+    for reminder in completed_reminders:
+        completion_date = datetime.strptime(
+            reminder["completionDate"], "%Y-%m-%d %H:%M:%S"
+        ).date()
+        if completion_date not in reminders_by_date:
+            reminders_by_date[completion_date] = []
+        reminders_by_date[completion_date].append(reminder)
+    return reminders_by_date
+
+
+def get_fieldnames(reminders):
+    fieldnames = set()
+    for reminder in reminders:
+        fieldnames.update(reminder.keys())
+    return sorted(list(fieldnames))
+
+
+def format_reminder_for_csv(reminder):
+    formatted_reminder = reminder.copy()
+
+    # Convert list of tags to a comma-separated string
+    if "tags" in formatted_reminder:
+        formatted_reminder["tags"] = ", ".join(formatted_reminder["tags"])
+
+    # Convert any complex data types to strings
+    for key, value in formatted_reminder.items():
+        if not isinstance(value, (str, int, float, bool, type(None))):
+            formatted_reminder[key] = str(value)
+
+    return formatted_reminder
