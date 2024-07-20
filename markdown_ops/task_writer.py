@@ -79,7 +79,7 @@ def write_task(
         )
         file.write(f"{prefix}\t- {date_string}\n")
 
-        # Write tags
+        # Write tags (now including tags from sections)
         write_task_tags(file, task.get("tags", []), prefix=prefix)
 
     if subtasks:

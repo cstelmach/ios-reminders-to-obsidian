@@ -82,14 +82,27 @@ def get_section_for_reminder(reminder_uuid, list_id):
 
 def add_section_to_reminders(reminders, list_id):
     for reminder in reminders:
-        reminder["section"] = get_section_for_reminder(reminder["UUID"], list_id)
+        section = get_section_for_reminder(reminder["UUID"], list_id)
+        reminder["section"] = section
+        if section:
+            tags_to_add = get_tags_for_section(section)
+            reminder["tags"] = list(set(reminder.get("tags", []) + tags_to_add))
     return reminders
 
 
 def should_hide_section(section_name):
-    sections_to_hide = config.get("sectionsToHide", [])
+    sections_to_hide = config.get("sections", {}).get("sectionsToHide", [])
     return any(
         (isinstance(pattern, str) and pattern == section_name)
         or (hasattr(pattern, "match") and pattern.match(section_name))
         for pattern in sections_to_hide
     )
+
+
+def get_tags_for_section(section_name):
+    sections_to_add_as_tags = config.get("sections", {}).get("sectionsToAddAsTags", [])
+    tags = []
+    for pattern, tag in sections_to_add_as_tags:
+        if pattern.match(section_name):
+            tags.append(tag)
+    return tags

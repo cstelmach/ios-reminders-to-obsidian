@@ -17,8 +17,8 @@ def load_config(config_file="data.json", default_config_file="data_default.json"
         with open(default_config_path, "r") as file:
             config = json.load(file)
 
-    # Convert string patterns to regex objects for listsToImport, listsToOmit, and sectionsToHide
-    for key in ["listsToImport", "listsToOmit", "sectionsToHide"]:
+    # Convert string patterns to regex objects for listsToImport and listsToOmit
+    for key in ["listsToImport", "listsToOmit"]:
         if key in config:
             config[key] = [
                 (
@@ -29,6 +29,25 @@ def load_config(config_file="data.json", default_config_file="data_default.json"
                 )
                 for pattern in config[key]
             ]
+
+    # Handle the new sections dictionary
+    if "sections" in config:
+        # Convert sectionsToHide patterns to regex objects
+        config["sections"]["sectionsToHide"] = [
+            (
+                re.compile(pattern)
+                if isinstance(pattern, str)
+                and any(c in pattern for c in r".*?+^$()[]{|}\\")
+                else pattern
+            )
+            for pattern in config["sections"].get("sectionsToHide", [])
+        ]
+
+        # Convert sectionsToAddAsTags patterns to regex objects
+        config["sections"]["sectionsToAddAsTags"] = [
+            (re.compile(pattern), tag)
+            for pattern, tag in config["sections"].get("sectionsToAddAsTags", [])
+        ]
 
     return config
 

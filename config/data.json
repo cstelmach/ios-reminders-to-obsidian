@@ -16,7 +16,13 @@
   "listsToImport": ["temp.*"],
   "importButAllOverwrite": false,
   "listsToOmit": [],
-  "sectionsToHide": [".*OBE.*", ".*_hidden"],
+  "sections": {
+    "sectionsToHide": ["Hidden Section", ".*_hidden"],
+    "sectionsToAddAsTags": [
+      [".*OBE.*", "OBE"],
+      ["Section1", "Section1Tag"]
+    ]
+  },
   "includeTodaysCompletedTasks": true,
   "partiallyCompletedCheckbox": "[-]",
   "cancelledCheckbox": "[~]",
