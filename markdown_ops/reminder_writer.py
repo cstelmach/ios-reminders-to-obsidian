@@ -1,16 +1,16 @@
-from .header_utils import write_section_header, get_header
+from .header_utils import write_export_header, get_header
 from processing.task_processing import separate_tasks, group_child_tasks_by_parent
 from .task_writer import write_task
 from config import config
 
 
 def append_reminders_to_file(
-    filename, reminders, section_header_exists, reminder_list, config
+    filename, reminders, export_header_exists, reminder_list, config
 ):
     with open(filename, "a") as file:
-        if not section_header_exists:
-            write_section_header(
-                file, config["sectionHeader"], config["sectionHeaderLevel"]
+        if not export_header_exists:
+            write_export_header(
+                file, config["exportHeader"], config["exportHeaderLevel"]
             )
         else:
             file.write("\n")

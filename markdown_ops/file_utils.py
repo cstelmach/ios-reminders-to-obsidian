@@ -1,7 +1,6 @@
 import os
 import json
 from config import config
-from .header_utils import write_section_header
 
 
 def get_paths_and_template():
