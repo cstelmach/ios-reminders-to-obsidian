@@ -64,16 +64,19 @@ def write_task(
         if body and body != "missing value":
             write_multiline_body(file, body, prefix=prefix + "\t")
 
-        # Write additional task properties (including priority if it exists)
-        properties = format_task_properties(task)
-        for prop in properties:
-            file.write(f"{prefix}\t- {prop}\n")
-
         # Write date string (creation/due/completion)
         date_string = format_task_dates(
             task, date_format_for_datetime, time_format, wrap_in_link
         )
         file.write(f"{prefix}\t- {date_string}\n")
+
+        # Format advanced properties
+        format_single_line = config.get("formatAdvancedPropertiesInSingleLine", False)
+        advanced_properties = []
+
+        # Write additional task properties (including priority if it exists)
+        properties = format_task_properties(task)
+        advanced_properties.extend(properties)
 
         # Write section information if available and not hidden (only for main tasks and parent tasks)
         if (
@@ -82,14 +85,23 @@ def write_task(
             and not should_hide_section(task["section"])
         ):
             section_string = format_section_property(task["section"])
-            file.write(f"{prefix}\t- {section_string}\n")
+            advanced_properties.append(section_string)
 
         # Write tags (now including tags from sections)
-        write_task_tags(file, task.get("tags", []), prefix=prefix)
+        tags_string = write_task_tags(task.get("tags", []), return_string=True)
+        if tags_string:
+            advanced_properties.append(tags_string)
+
+        if format_single_line:
+            if advanced_properties:
+                file.write(f"{prefix}\t- {', '.join(advanced_properties)}\n")
+        else:
+            for prop in advanced_properties:
+                file.write(f"{prefix}\t- {prop}\n")
 
     if subtasks:
         file.write(f"{prefix}\t- Subtasks:\n\n")
-        
+
         for index, subtask in enumerate(
             sorted(subtasks, key=lambda x: x.get("completionDate") or "9999-12-31")
         ):

@@ -6,6 +6,7 @@ import re
 
 
 def load_config(config_file="data.json", default_config_file="data_default.json"):
+    # * Get and flatten the config file for easier access
     config_dir = os.path.dirname(os.path.abspath(__file__))
     config_path = os.path.join(config_dir, config_file)
     default_config_path = os.path.join(config_dir, default_config_file)

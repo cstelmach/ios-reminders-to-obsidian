@@ -1,3 +1,5 @@
+# ios_reminders_to_markdown_journal/processing/task_utils.py
+
 from config import config
 
 
@@ -7,7 +9,12 @@ def format_tag(tag):
     return tag
 
 
-def write_task_tags(file, tags, prefix=""):
+def write_task_tags(tags, prefix="", return_string=False):
     if tags:
         formatted_tags = ", ".join(format_tag(tag) for tag in tags)
-        file.write(f"{prefix}\t- tags: {formatted_tags}\n")
+        tag_string = f"tags: {formatted_tags}"
+        if return_string:
+            return tag_string
+        else:
+            file.write(f"{prefix}\t- {tag_string}\n")
+    return ""

@@ -43,6 +43,7 @@
     "exportHeaderLevel": 2,
     "listHeaderLevel": 3,
     "wrapDateStringInInternalLink": false,
+    "formatAdvancedPropertiesInSingleLine": false,
     "useMetadataFormattingForDatetimes": false,
     "useMetadataFormattingForSections": false,
     "useMetadataFormattingForPriority": false,

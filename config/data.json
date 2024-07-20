@@ -2,7 +2,7 @@
   "fundamentals": {
     "obsidianSettingsPath": "/Users/cs/Obsidian/_/.obsidian",
     "usePeriodicNotesPlugin": true,
-    "dailyNoteFolderOverwrite": "/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal",
+    "dailyNoteFolderOverwrite": "/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal/temp",
     "dailyNoteFilenameOverwrite": "JD YYYYMMDD",
     "templateOverwritePath": "/Users/cs/Obsidian/_/slipbox/resources/templates/RT Journal-Day-Only_Completed_Tasks.md",
     "manualDatabaseFolderPath": "/Users/cs/Library/Group Containers/group.com.apple.reminders/Container_v1/Stores/",
@@ -11,7 +11,7 @@
   "export": {
     "isCacheActive": false,
     "exportToCSV": true,
-    "csvExportFolderPath": "/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal"
+    "csvExportFolderPath": "/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal/temp"
   },
   "sections": {
     "sectionsToHide": ["Hidden Section", ".*_hidden"],
@@ -47,6 +47,7 @@
     "exportHeaderLevel": 2,
     "listHeaderLevel": 3,
     "wrapDateStringInInternalLink": true,
+    "formatAdvancedPropertiesInSingleLine": true,
     "useMetadataFormattingForDatetimes": true,
     "useMetadataFormattingForSections": true,
     "useMetadataFormattingForPriority": true,
