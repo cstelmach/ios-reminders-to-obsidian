@@ -1,5 +1,6 @@
 # ios_reminders_to_markdown_journal/markdown_ops/task_property_formatter.py
 
+import re
 from config import config
 
 
@@ -45,6 +46,17 @@ def format_task_properties(task):
     return properties
 
 
+def clean_section_name(section_name):
+    if config.get("removeNonStandardCharactersFromSectionNames", False):
+        # Remove non-alphanumeric characters (except spaces)
+        cleaned_name = re.sub(r"[^a-zA-Z0-9 ]", "", section_name)
+        # Remove leading and trailing whitespace
+        cleaned_name = cleaned_name.strip()
+        return cleaned_name
+    return section_name
+
+
 def format_section_property(section):
+    cleaned_section = clean_section_name(section)
     use_metadata_formatting = config.get("useMetadataFormattingForSections", False)
-    return format_property("section", section, use_metadata_formatting)
+    return format_property("section", cleaned_section, use_metadata_formatting)

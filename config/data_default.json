@@ -43,7 +43,8 @@
     "wrapDateStringInInternalLink": false,
     "useMetadataFormattingForDatetimes": false,
     "useMetadataFormattingForSections": false,
-    "useMetadataFormattingForPriority": false
+    "useMetadataFormattingForPriority": false,
+    "removeNonStandardCharactersFromSectionNames": false
   },
   "development": {
     "includeTodaysCompletedTasks": false,
