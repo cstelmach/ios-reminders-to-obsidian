@@ -1,21 +1,16 @@
 {
-  "obsidianSettingsPath": "/Users/cs/Obsidian/_/.obsidian",
-  "usePeriodicNotesPlugin": true,
-  "dailyNoteFolderOverwrite": "/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal",
-  "dailyNoteFilenameOverwrite": "JD YYYYMMDD",
-  "dateFormat": "JD YYYYMMDD",
-  "timeFormat": "HH:mm",
-  "dateTimeSeparator": " ",
-  "listHeaderLevel": 3,
-  "exportHeader": "Completed Tasks",
-  "exportHeaderLevel": 2,
-  "wrapDateStringInInternalLink": true,
-  "templateOverwritePath": "/Users/cs/Obsidian/_/slipbox/resources/templates/RT Journal-Day-Only_Completed_Tasks.md",
-  "isCacheActive": false,
-  "skipNotesAlreadyImported": false,
-  "listsToImport": ["temp.*"],
-  "importButAllOverwrite": false,
-  "listsToOmit": [],
+  "fundamentals": {
+    "obsidianSettingsPath": "/Users/cs/Obsidian/_/.obsidian",
+    "usePeriodicNotesPlugin": true,
+    "dailyNoteFolderOverwrite": "/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal",
+    "dailyNoteFilenameOverwrite": "JD YYYYMMDD",
+    "templateOverwritePath": "/Users/cs/Obsidian/_/slipbox/resources/templates/RT Journal-Day-Only_Completed_Tasks.md",
+    "manualDatabaseFolderPath": "/Users/cs/Library/Group Containers/group.com.apple.reminders/Container_v1/Stores/",
+    "useDatabaseFunctions": true
+  },
+  "export": {
+    "isCacheActive": false
+  },
   "sections": {
     "sectionsToHide": ["Hidden Section", ".*_hidden"],
     "sectionsToAddAsTags": [
@@ -23,14 +18,31 @@
       ["Section1", "Section1Tag"]
     ]
   },
-  "includeTodaysCompletedTasks": true,
-  "partiallyCompletedCheckbox": "[-]",
-  "cancelledCheckbox": "[~]",
-  "tagDependentCompletionKinds": {
-    "cancelled": ["OBE", "CANCELLED"],
-    "partiallyComplete": ["partiallyComplete"]
+  "lists": {
+    "listsToImport": ["temp.*"],
+    "importAllListsButOmitted": false,
+    "listsToOmit": []
   },
-  "useMetadataFormattingForDatetimes": true,
-  "manualDatabaseFolderPath": "/Users/cs/Library/Group Containers/group.com.apple.reminders/Container_v1/Stores/",
-  "useDatabaseFunctions": true
+  "checkboxes": {
+    "partiallyCompletedCheckbox": "[-]",
+    "cancelledCheckbox": "[~]",
+    "tagDependentCompletionKinds": {
+      "cancelled": ["OBE", "CANCELLED"],
+      "partiallyComplete": ["partiallyComplete"]
+    }
+  },
+  "formatting": {
+    "dateFormat": "JD YYYYMMDD",
+    "timeFormat": "HH:mm",
+    "dateTimeSeparator": " ",
+    "exportHeader": "Completed Tasks",
+    "exportHeaderLevel": 2,
+    "listHeaderLevel": 3,
+    "wrapDateStringInInternalLink": true,
+    "useMetadataFormattingForDatetimes": true
+  },
+  "development": {
+    "includeTodaysCompletedTasks": true,
+    "skipNotesAlreadyImported": false
+  }
 }

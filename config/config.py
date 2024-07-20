@@ -17,39 +17,44 @@ def load_config(config_file="data.json", default_config_file="data_default.json"
         with open(default_config_path, "r") as file:
             config = json.load(file)
 
+    # Flatten the config for easier access
+    flat_config = {}
+    for section, values in config.items():
+        for key, value in values.items():
+            flat_config[key] = value
+
     # Convert string patterns to regex objects for listsToImport and listsToOmit
     for key in ["listsToImport", "listsToOmit"]:
-        if key in config:
-            config[key] = [
+        if key in flat_config:
+            flat_config[key] = [
                 (
                     re.compile(pattern)
                     if isinstance(pattern, str)
                     and any(c in pattern for c in r".*?+^$()[]{|}\\")
                     else pattern
                 )
-                for pattern in config[key]
+                for pattern in flat_config[key]
             ]
 
-    # Handle the new sections dictionary
-    if "sections" in config:
-        # Convert sectionsToHide patterns to regex objects
-        config["sections"]["sectionsToHide"] = [
+    # Handle the sections dictionary
+    if "sectionsToHide" in flat_config:
+        flat_config["sectionsToHide"] = [
             (
                 re.compile(pattern)
                 if isinstance(pattern, str)
                 and any(c in pattern for c in r".*?+^$()[]{|}\\")
                 else pattern
             )
-            for pattern in config["sections"].get("sectionsToHide", [])
+            for pattern in flat_config["sectionsToHide"]
         ]
 
-        # Convert sectionsToAddAsTags patterns to regex objects
-        config["sections"]["sectionsToAddAsTags"] = [
+    if "sectionsToAddAsTags" in flat_config:
+        flat_config["sectionsToAddAsTags"] = [
             (re.compile(pattern), tag)
-            for pattern, tag in config["sections"].get("sectionsToAddAsTags", [])
+            for pattern, tag in flat_config["sectionsToAddAsTags"]
         ]
 
-    return config
+    return flat_config
 
 
 config = load_config()

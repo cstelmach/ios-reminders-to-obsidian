@@ -3,7 +3,7 @@ from config import config
 
 
 def filter_reminder_lists(all_reminder_lists):
-    import_but_all_overwrite = config.get("importButAllOverwrite", False)
+    import_all_lists_but_omitted = config.get("importAllListsButOmitted", False)
     lists_to_import = config.get("listsToImport", [])
     lists_to_omit = config.get("listsToOmit", [])
 
@@ -15,8 +15,8 @@ def filter_reminder_lists(all_reminder_lists):
         if should_omit_list(list_title, lists_to_omit):
             continue
 
-        # If importButAllOverwrite is True, include all lists except those in listsToOmit
-        if import_but_all_overwrite:
+        # If importAllListsButOmitted is True, include all lists except those in listsToOmit
+        if import_all_lists_but_omitted:
             filtered_lists.append(list_title)
         # Otherwise, only include lists specified in listsToImport
         elif should_import_list(list_title, lists_to_import):

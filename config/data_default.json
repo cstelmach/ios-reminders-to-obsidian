@@ -1,33 +1,45 @@
 {
-  "obsidianSettingsPath": null,
-  "usePeriodicNotesPlugin": false,
-  "dailyNoteFolderOverwrite": null,
-  "dailyNoteFilenameOverwrite": null,
-  "dateFormat": "YYYY-MM-DD",
-  "timeFormat": "HH:mm:SS",
-  "dateTimeSeparator": " ",
-  "listHeaderLevel": 3,
-  "exportHeader": "Completed Tasks",
-  "exportHeaderLevel": 2,
-  "wrapDateStringInInternalLink": false,
-  "templateOverwritePath": null,
-  "isCacheActive": true,
-  "skipNotesAlreadyImported": true,
-  "listsToImport": [],
-  "importButAllOverwrite": false,
-  "listsToOmit": [],
+  "fundamentals": {
+    "obsidianSettingsPath": null,
+    "usePeriodicNotesPlugin": false,
+    "dailyNoteFolderOverwrite": null,
+    "dailyNoteFilenameOverwrite": null,
+    "templateOverwritePath": null,
+    "manualDatabaseFolderPath": null,
+    "useDatabaseFunctions": true
+  },
+  "export": {
+    "isCacheActive": true
+  },
   "sections": {
     "sectionsToHide": [],
     "sectionsToAddAsTags": [[".*OBE.*", "OBE"]]
   },
-  "includeTodaysCompletedTasks": false,
-  "partiallyCompletedCheckbox": "[-]",
-  "cancelledCheckbox": "[~]",
-  "tagDependentCompletionKinds": {
-    "cancelled": ["OBE", "CANCELLED"],
-    "partiallyComplete": ["partiallyComplete"]
+  "lists": {
+    "listsToImport": [],
+    "importAllListsButOmitted": false,
+    "listsToOmit": []
   },
-  "useMetadataFormattingForDatetimes": false,
-  "manualDatabaseFolderPath": null,
-  "useDatabaseFunctions": true
+  "checkboxes": {
+    "partiallyCompletedCheckbox": "[-]",
+    "cancelledCheckbox": "[~]",
+    "tagDependentCompletionKinds": {
+      "cancelled": ["OBE", "CANCELLED"],
+      "partiallyComplete": ["partiallyComplete"]
+    }
+  },
+  "formatting": {
+    "dateFormat": "YYYY-MM-DD",
+    "timeFormat": "HH:mm:SS",
+    "dateTimeSeparator": " ",
+    "exportHeader": "Completed Tasks",
+    "exportHeaderLevel": 2,
+    "listHeaderLevel": 3,
+    "wrapDateStringInInternalLink": false,
+    "useMetadataFormattingForDatetimes": false
+  },
+  "development": {
+    "includeTodaysCompletedTasks": false,
+    "skipNotesAlreadyImported": true
+  }
 }
