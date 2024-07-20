@@ -9,7 +9,7 @@
     "useDatabaseFunctions": true
   },
   "export": {
-    "isCacheActive": false,
+    "isCacheActive": true,
     "exportToCSV": true,
     "csvExportFolderPath": "/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal/temp"
   },
@@ -27,9 +27,9 @@
     ]
   },
   "lists": {
-    "listsToImport": ["temp.*"],
+    "listsToImport": [".*"],
     "importAllListsButOmitted": false,
-    "listsToOmit": []
+    "listsToOmit": ["projects.code"]
   },
   "checkboxes": {
     "partiallyCompletedCheckbox": "[-]",

@@ -36,9 +36,34 @@ def export_reminders_to_csv(completed_reminders):
 def group_reminders_by_date(completed_reminders):
     reminders_by_date = {}
     for reminder in completed_reminders:
-        completion_date = datetime.strptime(
-            reminder["completionDate"], "%Y-%m-%d %H:%M:%S"
-        ).date()
+        completion_date = reminder.get("completionDate")
+        if completion_date:
+            try:
+                completion_date = datetime.strptime(
+                    completion_date, "%Y-%m-%d %H:%M:%S"
+                ).date()
+            except ValueError:
+                print(
+                    f"Warning: Invalid completion date format for reminder: {reminder['name']}"
+                )
+                continue
+        else:
+            # Use creation date if completion date is not available
+            creation_date = reminder.get("creationDate")
+            if creation_date:
+                try:
+                    completion_date = datetime.strptime(
+                        creation_date, "%Y-%m-%d %H:%M:%S"
+                    ).date()
+                except ValueError:
+                    print(
+                        f"Warning: Invalid creation date format for reminder: {reminder['name']}"
+                    )
+                    continue
+            else:
+                print(f"Warning: No valid date found for reminder: {reminder['name']}")
+                continue
+
         if completion_date not in reminders_by_date:
             reminders_by_date[completion_date] = []
         reminders_by_date[completion_date].append(reminder)
