@@ -13,7 +13,12 @@
   },
   "sections": {
     "sectionsToHide": [],
-    "sectionsToAddAsTags": [[".*OBE.*", "OBE"]]
+    "sectionsToAddAsTags": [
+      {
+        "sectionMatchRegex": ".*OBE.*",
+        "tagToAddUponMatch": "OBE"
+      }
+    ]
   },
   "lists": {
     "listsToImport": [],

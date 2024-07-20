@@ -100,9 +100,9 @@ def should_hide_section(section_name):
 
 
 def get_tags_for_section(section_name):
-    sections_to_add_as_tags = config.get("sections", {}).get("sectionsToAddAsTags", [])
+    sections_to_add_as_tags = config.get("sectionsToAddAsTags", [])
     tags = []
-    for pattern, tag in sections_to_add_as_tags:
-        if pattern.match(section_name):
-            tags.append(tag)
+    for section_tag_config in sections_to_add_as_tags:
+        if section_tag_config["sectionMatchRegex"].match(section_name):
+            tags.append(section_tag_config["tagToAddUponMatch"])
     return tags

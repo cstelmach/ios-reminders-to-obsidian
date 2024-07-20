@@ -50,8 +50,11 @@ def load_config(config_file="data.json", default_config_file="data_default.json"
 
     if "sectionsToAddAsTags" in flat_config:
         flat_config["sectionsToAddAsTags"] = [
-            (re.compile(pattern), tag)
-            for pattern, tag in flat_config["sectionsToAddAsTags"]
+            {
+                "sectionMatchRegex": re.compile(item["sectionMatchRegex"]),
+                "tagToAddUponMatch": item["tagToAddUponMatch"],
+            }
+            for item in flat_config["sectionsToAddAsTags"]
         ]
 
     return flat_config

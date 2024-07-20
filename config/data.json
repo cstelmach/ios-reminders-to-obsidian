@@ -14,8 +14,14 @@
   "sections": {
     "sectionsToHide": ["Hidden Section", ".*_hidden"],
     "sectionsToAddAsTags": [
-      [".*OBE.*", "OBE"],
-      ["Section1", "Section1Tag"]
+      {
+        "sectionMatchRegex": ".*OBE.*",
+        "tagToAddUponMatch": "OBE"
+      },
+      {
+        "sectionMatchRegex": "Section1",
+        "tagToAddUponMatch": "Section1Tag"
+      }
     ]
   },
   "lists": {
