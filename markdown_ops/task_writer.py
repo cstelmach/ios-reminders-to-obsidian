@@ -3,7 +3,7 @@
 from .indentation_utils import write_multiline_text, write_multiline_body
 from processing.task_utils import write_task_tags
 from .task_datetime_formatter import format_task_dates
-from .task_property_formatter import format_task_properties
+from .task_property_formatter import format_task_properties, format_section_property
 from config import config
 from database.section_utils import should_hide_section
 
@@ -75,7 +75,8 @@ def write_task(
             and task.get("section")
             and not should_hide_section(task["section"])
         ):
-            file.write(f"{prefix}\t- section: {task['section']}\n")
+            section_string = format_section_property(task["section"])
+            file.write(f"{prefix}\t- {section_string}\n")
 
         # Write date string (creation/due/completion)
         date_string = format_task_dates(

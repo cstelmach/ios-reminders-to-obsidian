@@ -45,7 +45,9 @@
     "exportHeaderLevel": 2,
     "listHeaderLevel": 3,
     "wrapDateStringInInternalLink": true,
-    "useMetadataFormattingForDatetimes": true
+    "useMetadataFormattingForDatetimes": true,
+    "useMetadataFormattingForSections": true,
+    "useMetadataFormattingForPriority": true
   },
   "development": {
     "includeTodaysCompletedTasks": true,

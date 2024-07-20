@@ -1,3 +1,5 @@
+# ios_reminders_to_markdown_journal/markdown_ops/task_property_formatter.py
+
 from config import config
 
 
@@ -30,9 +32,19 @@ def format_task_properties(task):
     if priority not in [None, 0]:
         priority_value = get_priority_value(priority)
         if priority_value:
-            priority_string = format_property("priority", priority_value)
+            use_metadata_formatting = config.get(
+                "useMetadataFormattingForPriority", False
+            )
+            priority_string = format_property(
+                "priority", priority_value, use_metadata_formatting
+            )
             properties.append(priority_string)
 
     # Add other properties here in the future if needed
 
     return properties
+
+
+def format_section_property(section):
+    use_metadata_formatting = config.get("useMetadataFormattingForSections", False)
+    return format_property("section", section, use_metadata_formatting)
