@@ -11,7 +11,9 @@
   "export": {
     "isCacheActive": true,
     "exportToCSV": true,
-    "csvExportFolderPath": "/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal/temp"
+    "csvExportFolderPath": "/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal/temp",
+    "exportToJSON": true,
+    "jsonExportFolderPath": "/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal/temp"
   },
   "sections": {
     "sectionsToHide": ["Hidden Section", ".*_hidden"],

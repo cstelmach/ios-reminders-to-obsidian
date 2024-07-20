@@ -11,7 +11,9 @@
   "export": {
     "isCacheActive": true,
     "exportToCSV": false,
-    "csvExportFolderPath": ""
+    "csvExportFolderPath": "",
+    "exportToJSON": false,
+    "jsonExportFolderPath": ""
   },
   "sections": {
     "sectionsToHide": [],

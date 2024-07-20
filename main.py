@@ -9,6 +9,7 @@ from reminders import (
 )
 from markdown_ops import write_reminders_to_markdown
 from csv_export import export_reminders_to_csv
+from json_export import export_reminders_to_json
 
 
 def list_completed_reminders(test_lists=None):
@@ -41,6 +42,10 @@ def list_completed_reminders(test_lists=None):
         # Export to CSV if enabled
         if config["exportToCSV"]:
             export_reminders_to_csv(completed_reminders)
+
+        # Export to JSON if enabled
+        if config["exportToJSON"]:
+            export_reminders_to_json(completed_reminders)
 
     # if config["isCacheActive"]:
     #     update_cache()
