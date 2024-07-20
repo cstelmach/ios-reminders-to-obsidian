@@ -45,9 +45,9 @@
     "exportHeaderLevel": 2,
     "listHeaderLevel": 3,
     "wrapDateStringInInternalLink": true,
-    "useMetadataFormattingForDatetimes": true,
-    "useMetadataFormattingForSections": true,
-    "useMetadataFormattingForPriority": true,
+    "useMetadataFormattingForDatetimes": false,
+    "useMetadataFormattingForSections": false,
+    "useMetadataFormattingForPriority": false,
     "removeNonStandardCharactersFromSectionNames": true
   },
   "development": {

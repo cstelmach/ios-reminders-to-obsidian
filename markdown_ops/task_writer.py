@@ -69,6 +69,12 @@ def write_task(
         for prop in properties:
             file.write(f"{prefix}\t- {prop}\n")
 
+        # Write date string (creation/due/completion)
+        date_string = format_task_dates(
+            task, date_format_for_datetime, time_format, wrap_in_link
+        )
+        file.write(f"{prefix}\t- {date_string}\n")
+
         # Write section information if available and not hidden (only for main tasks and parent tasks)
         if (
             not is_subtask
@@ -77,12 +83,6 @@ def write_task(
         ):
             section_string = format_section_property(task["section"])
             file.write(f"{prefix}\t- {section_string}\n")
-
-        # Write date string (creation/due/completion)
-        date_string = format_task_dates(
-            task, date_format_for_datetime, time_format, wrap_in_link
-        )
-        file.write(f"{prefix}\t- {date_string}\n")
 
         # Write tags (now including tags from sections)
         write_task_tags(file, task.get("tags", []), prefix=prefix)
