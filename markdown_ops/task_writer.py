@@ -8,13 +8,15 @@ from config import config
 from database.section_utils import should_hide_section
 
 
-def get_checkbox_status(task, subtasks):
+def get_checkbox_status(task, subtasks, parent_task=None):
     tag_dependent_completion_kinds = config.get("tagDependentCompletionKinds", {})
     section_dependent_completion_kinds = config.get(
         "sectionDependentCompletionKinds", {}
     )
     task_tags = set(task.get("tags", []))
-    task_section = task.get("section", "")
+    task_section = task.get("section") or (
+        parent_task.get("section") if parent_task else ""
+    )
 
     # Check for cancelled tags first (highest priority)
     cancelled_tags = set(tag_dependent_completion_kinds.get("cancelled", []))
@@ -60,10 +62,11 @@ def write_task(
     separator,
     wrap_in_link,
     is_subtask=False,
+    parent_task=None,
 ):
     prefix = "\t" if is_subtask else ""
 
-    checkbox = get_checkbox_status(task, subtasks)
+    checkbox = get_checkbox_status(task, subtasks, parent_task)
 
     write_multiline_text(
         file, task["name"], prefix=prefix, initial_prefix=f"- {checkbox} "
@@ -131,6 +134,7 @@ def write_task(
                     separator,
                     wrap_in_link,
                     is_subtask=True,
+                    parent_task=task,
                 )
                 # Don't print a new line after the last subtask
                 if index < len(subtasks) - 1:
@@ -138,3 +142,5 @@ def write_task(
 
     if not is_subtask:
         file.write("\n")  # Add a new line after the main task
+
+
