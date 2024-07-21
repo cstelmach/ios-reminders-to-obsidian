@@ -114,12 +114,12 @@ def write_task(
         if tags_string:
             advanced_properties.append(tags_string)
 
-        if format_single_line:
-            if advanced_properties:
+        if advanced_properties:
+            if format_single_line:
                 file.write(f"{prefix}\t- {', '.join(advanced_properties)}\n")
-        else:
-            for prop in advanced_properties:
-                file.write(f"{prefix}\t- {prop}\n")
+            else:
+                for prop in advanced_properties:
+                    file.write(f"{prefix}\t- {prop}\n")
 
     if subtasks:
         file.write(f"{prefix}\t- Subtasks:\n\n")

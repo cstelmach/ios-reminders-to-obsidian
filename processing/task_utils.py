@@ -11,10 +11,11 @@ def format_tag(tag):
 
 def write_task_tags(tags, prefix="", return_string=False):
     if tags:
-        formatted_tags = ", ".join(format_tag(tag) for tag in tags)
-        tag_string = f"tags: {formatted_tags}"
-        if return_string:
-            return tag_string
-        else:
-            file.write(f"{prefix}\t- {tag_string}\n")
+        formatted_tags = [format_tag(tag) for tag in tags if tag.strip()]
+        if formatted_tags:
+            tag_string = f"tags: {', '.join(formatted_tags)}"
+            if return_string:
+                return tag_string
+            else:
+                file.write(f"{prefix}\t- {tag_string}\n")
     return ""
