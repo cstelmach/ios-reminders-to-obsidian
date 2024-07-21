@@ -10,9 +10,9 @@
   },
   "export": {
     "isCacheActive": true,
-    "exportToCSV": true,
+    "exportToCSV": false,
     "csvExportFolderPath": "/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal/temp",
-    "exportToJSON": true,
+    "exportToJSON": false,
     "jsonExportFolderPath": "/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal/temp"
   },
   "sections": {
@@ -23,29 +23,32 @@
         "tagToAddUponMatch": "OBE"
       },
       {
-        "sectionMatchRegex": "Section1",
-        "tagToAddUponMatch": "Section1Tag"
+        "sectionMatchRegex": "",
+        "tagToAddUponMatch": ""
       }
     ]
   },
   "lists": {
-    "listsToImport": [".*"],
+    "listsToImport": ["temp.*"],
     "importAllListsButOmitted": false,
-    "listsToOmit": ["projects.code"]
+    "listsToOmit": []
   },
   "checkboxes": {
     "partiallyCompletedCheckbox": "[-]",
     "cancelledCheckbox": "[~]",
     "tagDependentCompletionKinds": {
-      "cancelled": ["OBE", "CANCELLED"],
-      "partiallyComplete": ["partiallyComplete"]
+      "cancelled": [],
+      "partiallyComplete": []
     },
     "sectionDependentCompletionKinds": {
-      "cancelled": ["OBE"],
-      "partiallyComplete": ["Section1"]
+      "cancelled": [],
+      "partiallyComplete": []
     }
   },
   "formatting": {
+    "createdDateString": "created",
+    "dueDateString": "due",
+    "completionDateString": "completed",
     "dateFormat": "JD YYYYMMDD",
     "timeFormat": "HH:mm",
     "dateTimeSeparator": " ",
@@ -54,10 +57,10 @@
     "listHeaderLevel": 3,
     "wrapDateStringInInternalLink": true,
     "formatAdvancedPropertiesInSingleLine": true,
-    "useMetadataFormattingForDatetimes": true,
-    "useMetadataFormattingForSections": true,
-    "useMetadataFormattingForPriority": true,
-    "useMetadataFormattingForTags": true,
+    "useMetadataFormattingForDatetimes": false,
+    "useMetadataFormattingForSections": false,
+    "useMetadataFormattingForPriority": false,
+    "useMetadataFormattingForTags": false,
     "removeNonStandardCharactersFromSectionNames": true
   },
   "development": {

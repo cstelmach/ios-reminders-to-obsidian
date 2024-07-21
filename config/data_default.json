@@ -42,6 +42,9 @@
     }
   },
   "formatting": {
+    "createdDateString": "created",
+    "dueDateString": "due",
+    "completionDateString": "completed",
     "dateFormat": "YYYY-MM-DD",
     "timeFormat": "HH:mm:SS",
     "dateTimeSeparator": " ",

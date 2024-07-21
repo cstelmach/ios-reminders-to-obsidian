@@ -3,10 +3,15 @@
 from datetime import datetime
 from utils.datetime_formatter import format_date, format_time
 from .task_property_formatter import format_property
+from config import config
 
 
 def format_task_dates(task, date_format_for_datetime, time_format, wrap_in_link):
     date_string = ""
+
+    created_string = config.get("createdDateString", "created")
+    due_string = config.get("dueDateString", "due")
+    completed_string = config.get("completionDateString", "completion")
 
     # Format creation date if available
     if "creationDate" in task and task["creationDate"]:
@@ -15,7 +20,7 @@ def format_task_dates(task, date_format_for_datetime, time_format, wrap_in_link)
         )
         formatted_creation_time = format_time(task["creationDate"], time_format)
         date_string += format_property(
-            "created", f"{formatted_creation_date} {formatted_creation_time}"
+            created_string, f"{formatted_creation_date} {formatted_creation_time}"
         )
 
     # Format due date if available
@@ -26,11 +31,11 @@ def format_task_dates(task, date_format_for_datetime, time_format, wrap_in_link)
         )
 
         if task.get("allDayDueDate") or due_date.time() == datetime.min.time():
-            due_string = format_property("due", formatted_due_date)
+            due_string = format_property(due_string, formatted_due_date)
         else:
             formatted_due_time = format_time(task["dueDate"], time_format)
             due_string = format_property(
-                "due", f"{formatted_due_date} {formatted_due_time}"
+                due_string, f"{formatted_due_date} {formatted_due_time}"
             )
 
         date_string += f", {due_string}" if date_string else due_string
@@ -42,7 +47,7 @@ def format_task_dates(task, date_format_for_datetime, time_format, wrap_in_link)
         )
         formatted_completion_time = format_time(task["completionDate"], time_format)
         completion_string = format_property(
-            "completed", f"{formatted_completion_date} {formatted_completion_time}"
+            completed_string, f"{formatted_completion_date} {formatted_completion_time}"
         )
         date_string += f" -> {completion_string}" if date_string else completion_string
 
