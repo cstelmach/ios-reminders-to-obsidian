@@ -22,9 +22,9 @@ def format_date(date_input, date_format, wrap_in_link):
     )
 
     if wrap_in_link:
-        formatted_date = f"[[{formatted_date}]]"
-
-    return formatted_date
+        return f"[[{formatted_date}]]"
+    else:
+        return formatted_date
 
 
 def format_time(date_input, time_format):
@@ -46,16 +46,15 @@ def format_time(date_input, time_format):
 
 
 def format_datetime(date_str, date_format, time_format, separator, wrap_in_link):
-    date_part = format_date(date_str, date_format, False)  # Don't wrap individual parts
-    time_part = format_time(date_str, time_format)
+    date_obj = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+    date_part = format_date(date_obj, date_format, False)  # Don't wrap individual parts
+    time_part = format_time(date_obj, time_format)
 
     formatted_datetime = f"{date_part}{separator}{time_part}"
 
     if config.get("makeDatetimesInternalLinkWithAlias", False):
         daily_note_format = config.get("dailyNoteFilenameOverwrite", "YYYY-MM-DD")
-        daily_note_date = format_date_for_filename(
-            datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S"), daily_note_format
-        )
+        daily_note_date = format_date_for_filename(date_obj, daily_note_format)
         return f"[[{daily_note_date}|{formatted_datetime}]]"
     elif wrap_in_link:
         return f"[[{formatted_datetime}]]"
