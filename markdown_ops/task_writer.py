@@ -14,8 +14,8 @@ def get_checkbox_status(task, subtasks, parent_task=None):
         "sectionDependentCompletionKinds", {}
     )
     task_tags = set(task.get("tags", []))
-    task_section = task.get("section") or (
-        parent_task.get("section") if parent_task else ""
+    task_section = (
+        task.get("section") or (parent_task.get("section") if parent_task else "") or ""
     )
 
     # Check for cancelled tags first (highest priority)
@@ -30,16 +30,18 @@ def get_checkbox_status(task, subtasks, parent_task=None):
     if task_tags.intersection(partially_complete_tags):
         return config.get("partiallyCompletedCheckbox", "[-]")
 
-    # Check for cancelled sections
-    cancelled_sections = set(section_dependent_completion_kinds.get("cancelled", []))
-    if task_section in cancelled_sections:
+    # Check for cancelled sections (substring matching)
+    cancelled_sections = section_dependent_completion_kinds.get("cancelled", [])
+    if task_section and any(section in task_section for section in cancelled_sections):
         return config.get("cancelledCheckbox", "[~]")
 
-    # Check for partially complete sections
-    partially_complete_sections = set(
-        section_dependent_completion_kinds.get("partiallyComplete", [])
+    # Check for partially complete sections (substring matching)
+    partially_complete_sections = section_dependent_completion_kinds.get(
+        "partiallyComplete", []
     )
-    if task_section in partially_complete_sections:
+    if task_section and any(
+        section in task_section for section in partially_complete_sections
+    ):
         return config.get("partiallyCompletedCheckbox", "[-]")
 
     # If no tag or section dependent status, use the default logic
@@ -142,5 +144,3 @@ def write_task(
 
     if not is_subtask:
         file.write("\n")  # Add a new line after the main task
-
-
