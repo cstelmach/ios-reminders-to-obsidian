@@ -89,7 +89,8 @@ def write_task(
         date_string = format_task_dates(
             task, date_format_for_datetime, time_format, wrap_in_link
         )
-        file.write(f"{prefix}\t- {date_string}\n")
+        if date_string:
+            file.write(f"{prefix}\t- {date_string}\n")
 
         # Format advanced properties
         format_single_line = config.get("formatAdvancedPropertiesInSingleLine", False)
