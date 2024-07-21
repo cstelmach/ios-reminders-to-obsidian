@@ -34,14 +34,14 @@
     "listsToOmit": []
   },
   "checkboxes": {
-    "partiallyCompletedCheckbox": "[-]",
-    "cancelledCheckbox": "[~]",
+    "partiallyCompletedCheckbox": "[/]",
+    "cancelledCheckbox": "[-]",
     "tagDependentCompletionKinds": {
-      "cancelled": [],
+      "cancelled": ["OBE"],
       "partiallyComplete": []
     },
     "sectionDependentCompletionKinds": {
-      "cancelled": [],
+      "cancelled": ["OBE"],
       "partiallyComplete": []
     }
   },
@@ -49,13 +49,14 @@
     "createdDateString": "created",
     "dueDateString": "due",
     "completionDateString": "completed",
-    "dateFormat": "JD YYYYMMDD",
+    "dateFormat": "YYYY-MM-DD",
     "timeFormat": "HH:mm",
     "dateTimeSeparator": " ",
     "exportHeader": "Completed Tasks",
     "exportHeaderLevel": 2,
     "listHeaderLevel": 3,
-    "wrapDateStringInInternalLink": true,
+    "makeDatetimesInternalLinkWithAlias": true,
+    "wrapDateStringInInternalLink": false,
     "formatAdvancedPropertiesInSingleLine": true,
     "useMetadataFormattingForDatetimes": false,
     "useMetadataFormattingForSections": false,

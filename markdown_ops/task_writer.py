@@ -87,7 +87,7 @@ def write_task(
 
         # Write date string (creation/due/completion)
         date_string = format_task_dates(
-            task, date_format_for_datetime, time_format, wrap_in_link
+            task, date_format_for_datetime, time_format, separator, wrap_in_link
         )
         if date_string:
             file.write(f"{prefix}\t- {date_string}\n")
