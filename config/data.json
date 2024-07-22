@@ -29,7 +29,7 @@
     ]
   },
   "lists": {
-    "listsToImport": ["temp.*"],
+    "listsToImport": [".*"],
     "importAllListsButOmitted": false,
     "listsToOmit": []
   },
