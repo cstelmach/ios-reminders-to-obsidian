@@ -48,4 +48,6 @@ def get_date_range():
 def update_cache():
     if config.get("isCacheActive", True):
         today = datetime.now().date()
+        if not config.get("includeTodaysCompletedTasks", False):
+            today -= timedelta(days=1)
         save_cache(today)
