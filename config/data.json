@@ -50,22 +50,22 @@
     "dueDateString": "due",
     "completionDateString": "completed",
     "dateFormat": "YYYY-MM-DD",
-    "timeFormat": "HH:mm",
-    "dateTimeSeparator": " ",
+    "timeFormat": "",
+    "dateTimeSeparator": "",
     "exportHeader": "Completed Tasks",
     "exportHeaderLevel": 2,
     "listHeaderLevel": 3,
-    "makeDatetimesInternalLinkWithAlias": true,
+    "makeDatetimesInternalLinkWithAlias": false,
     "wrapDateStringInInternalLink": false,
     "formatAdvancedPropertiesInSingleLine": true,
-    "useMetadataFormattingForDatetimes": false,
+    "useMetadataFormattingForDatetimes": true,
     "useMetadataFormattingForSections": false,
     "useMetadataFormattingForPriority": false,
     "useMetadataFormattingForTags": false,
     "removeNonStandardCharactersFromSectionNames": true
   },
   "development": {
-    "includeTodaysCompletedTasks": true,
+    "includeTodaysCompletedTasks": false,
     "skipNotesAlreadyImported": false
   }
 }

@@ -94,7 +94,7 @@ def add_section_to_reminders(reminders, list_id):
 
 
 def should_hide_section(section_name):
-    sections_to_hide = config.get("sections", {}).get("sectionsToHide", [])
+    sections_to_hide = config.get("sectionsToHide", [])
     return any(
         (isinstance(pattern, str) and pattern == section_name)
         or (hasattr(pattern, "match") and pattern.match(section_name))

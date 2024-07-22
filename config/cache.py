@@ -1,9 +1,11 @@
+# ios_reminders_to_markdown_journal/config/cache.py
+
 import json
 import os
 from datetime import datetime, timedelta
-from config import config
+from .config import config
 
-CACHE_FILE = "cache.json"
+CACHE_FILE = os.path.join(os.path.dirname(__file__), "cache.json")
 
 
 def load_cache():
@@ -23,7 +25,7 @@ def save_cache(last_extraction_date):
 
 
 def get_date_range():
-    if not config["isCacheActive"]:
+    if not config.get("isCacheActive", True):
         start_date = datetime(1, 1, 1).date()  # very far in the past
     else:
         cache = load_cache()
@@ -35,7 +37,7 @@ def get_date_range():
         else:
             start_date = None  # Indicates that all reminders should be fetched
 
-    if config["includeTodaysCompletedTasks"]:
+    if config.get("includeTodaysCompletedTasks", False):
         end_date = datetime.now().date()
     else:
         end_date = (datetime.now() - timedelta(days=1)).date()
@@ -44,5 +46,6 @@ def get_date_range():
 
 
 def update_cache():
-    today = datetime.now().date()
-    save_cache(today)
+    if config.get("isCacheActive", True):
+        today = datetime.now().date()
+        save_cache(today)

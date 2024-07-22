@@ -1,7 +1,6 @@
 # python_modules/ios_reminders_to_markdown_journal/main.py
 
-from config import config
-from utils import get_date_range, update_cache
+from config import config, get_date_range, update_cache
 from reminders import (
     get_all_reminder_lists,
     get_completed_reminders_for_list,
@@ -28,7 +27,9 @@ def list_completed_reminders(test_lists=None):
 
     start_date, end_date = get_date_range()
 
-    print(f"Getting completed reminders for all lists...")
+    print(
+        f"Getting completed reminders for all lists from {start_date} to {end_date}..."
+    )
     all_completed_reminders = get_completed_reminders_for_list(
         reminder_lists, start_date, end_date
     )
@@ -40,15 +41,14 @@ def list_completed_reminders(test_lists=None):
         write_reminders_to_markdown(reminder_list, completed_reminders)
 
         # Export to CSV if enabled
-        if config["exportToCSV"]:
+        if config.get("exportToCSV", False):
             export_reminders_to_csv(completed_reminders)
 
         # Export to JSON if enabled
-        if config["exportToJSON"]:
+        if config.get("exportToJSON", False):
             export_reminders_to_json(completed_reminders)
 
-    # if config["isCacheActive"]:
-    #     update_cache()
+    update_cache()
 
     return all_completed_reminders
 
