@@ -18,7 +18,7 @@ def filter_reminder_lists(all_reminder_lists):
         # If importAllListsButOmitted is True, include all lists except those in listsToOmit
         if import_all_lists_but_omitted:
             filtered_lists.append(list_title)
-        # Otherwise, only include lists specified in listsToImport
+        # Otherwise, only include lists specified in listsToImport that are not in listsToOmit
         elif should_import_list(list_title, lists_to_import):
             filtered_lists.append(list_title)
 
