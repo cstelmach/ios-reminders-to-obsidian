@@ -48,8 +48,8 @@ def format_task_properties(task):
 
 def clean_section_name(section_name):
     if config.get("removeNonStandardCharactersFromSectionNames", False):
-        # Remove non-alphanumeric characters (except spaces)
-        cleaned_name = re.sub(r"[^a-zA-Z0-9 ]", "", section_name)
+        # Remove characters that are not alphanumeric, spaces, or specified special characters
+        cleaned_name = re.sub(r"[^a-zA-Z0-9\s\_\\\,\-.\|\/\?\!\&]", "", section_name)
         # Remove leading and trailing whitespace
         cleaned_name = cleaned_name.strip()
         return cleaned_name
