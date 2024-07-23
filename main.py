@@ -50,6 +50,8 @@ def list_completed_reminders(test_lists=None):
 
     update_cache()
 
+    print("Completed reminders processed successfully")
+
     return all_completed_reminders
 
 

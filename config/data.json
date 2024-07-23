@@ -50,7 +50,7 @@
     "partiallyCompletedCheckbox": "[/]",
     "cancelledCheckbox": "[-]",
     "tagDependentCompletionKinds": {
-      "cancelled": ["OBE"],
+      "cancelled": ["OBE", "notPossible", "statusPostponed"],
       "partiallyComplete": []
     },
     "sectionDependentCompletionKinds": {

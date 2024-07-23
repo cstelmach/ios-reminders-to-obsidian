@@ -16,6 +16,29 @@
 - [ ] skipNotesAlreadyImported doesn't work with multiple lists. Fix it.
 
 
+### statuPostponed:
+
+- [ ]  Feat:: Add section parameter to the sections dictionary of the data.json and it's default called listsWithSectionsAsSubheadings, which is by default empty and it's value is a list of list strings or regexes.
+  If the regex or string matches to a list, then for those lists, for the sections of those lists, instead of adding them as property, create a further subheading, one level below the list heading, and put all the reminders of the respective section in there. 
+
+  If there are other in this list that have no section, then let the section name all reminders that have no section be "Other".
+
+  ```json
+    "sections": {
+      "sectionsToHide": ["Hidden Section", ".*_hidden"],
+      "sectionsToAddAsTags": [[".*OBE.*", "OBE"]],
+      "listsWithSectionsAsSubheadings": []
+    },
+  ```
+ 
+
+- [ ] Feat: sort the reminders of the respective sections according to their completion time, as already done in the list for the main tasks and the subtask in their respective parent task
+
+- [ ] Feat: is there a way to sort the sections according to their order?
+
+- [ ] feat: also add parameter "sectionsToIgnoreTasks" to the data.json and it's default. It is by default empty. Where if a section in the sectionsToIgnoreTasks list value is matching exactly (no substring matching), then don't export the tasks with this section but continue with the next task.
+
+
 
 ### Maybe OBE:
 
