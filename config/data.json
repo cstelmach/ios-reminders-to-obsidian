@@ -2,7 +2,7 @@
   "fundamentals": {
     "obsidianSettingsPath": "/Users/cs/Obsidian/_/.obsidian",
     "usePeriodicNotesPlugin": true,
-    "dailyNoteFolderOverwrite": "/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal/temp",
+    "dailyNoteFolderOverwrite": "/Users/cs/Obsidian/_/journal/day",
     "dailyNoteFilenameOverwrite": "JD YYYYMMDD",
     "templateOverwritePath": "/Users/cs/Obsidian/_/slipbox/resources/templates/RT Journal-Day-Only_Completed_Tasks.md",
     "manualDatabaseFolderPath": "/Users/cs/Library/Group Containers/group.com.apple.reminders/Container_v1/Stores/",
@@ -10,28 +10,41 @@
   },
   "export": {
     "isCacheActive": true,
-    "exportToCSV": false,
-    "csvExportFolderPath": "/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal/temp",
-    "exportToJSON": false,
-    "jsonExportFolderPath": "/Users/cs/local/code/python_modules/ios_reminders_to_markdown_journal/temp"
+    "exportToCSV": true,
+    "csvExportFolderPath": "/Users/cs/Documents/Backups/Reminders/Completed Reminders Export/csv",
+    "exportToJSON": true,
+    "jsonExportFolderPath": "/Users/cs/Documents/Backups/Reminders/Completed Reminders Export/json"
+  },
+  "lists": {
+    "listsToImport": [".*"],
+    "importAllListsButOmitted": false,
+    "listsToOmit": [
+      "private.*",
+      ".*.periodic",
+      "Shopping",
+      "Others",
+      "Familie",
+      "temp.*"
+    ]
   },
   "sections": {
-    "sectionsToHide": ["Hidden Section", ".*_hidden"],
+    "sectionsToHide": [
+      ".*Consider.*",
+      ".*Plan",
+      ".*ToDo",
+      ".*Started",
+      ".*Current Project",
+      ".*Doing",
+      ".*Today.*",
+      ".*Done",
+      ".*hidden"
+    ],
     "sectionsToAddAsTags": [
-      {
-        "sectionMatchRegex": ".*OBE.*",
-        "tagToAddUponMatch": "OBE"
-      },
       {
         "sectionMatchRegex": "",
         "tagToAddUponMatch": ""
       }
     ]
-  },
-  "lists": {
-    "listsToImport": [".*"],
-    "importAllListsButOmitted": false,
-    "listsToOmit": []
   },
   "checkboxes": {
     "partiallyCompletedCheckbox": "[/]",
@@ -50,15 +63,15 @@
     "dueDateString": "due",
     "completionDateString": "completed",
     "dateFormat": "YYYY-MM-DD",
-    "timeFormat": "",
-    "dateTimeSeparator": "",
+    "timeFormat": "HH:mm",
+    "dateTimeSeparator": " ",
     "exportHeader": "Completed Tasks",
     "exportHeaderLevel": 2,
     "listHeaderLevel": 3,
-    "makeDatetimesInternalLinkWithAlias": false,
+    "makeDatetimesInternalLinkWithAlias": true,
     "wrapDateStringInInternalLink": false,
     "formatAdvancedPropertiesInSingleLine": true,
-    "useMetadataFormattingForDatetimes": true,
+    "useMetadataFormattingForDatetimes": false,
     "useMetadataFormattingForSections": false,
     "useMetadataFormattingForPriority": false,
     "useMetadataFormattingForTags": false,
