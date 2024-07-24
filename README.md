@@ -208,36 +208,35 @@ Here's an example of how the exported Markdown might look:
 ```markdown
 ## Completed Tasks
 
-### Work
+### task(today).imp
 
 - [x] Complete project proposal
 
-  - created: [[2024-07-22|2024-07-22 09:00]] -> completed: [[2024-07-22|2024-07-22 16:30]]
-  - priority: high, section: Urgent, tags: #project, #deadline
+  - created: [[JD 20240720|2024-07-20 09:00]] -> completed: [[JD 20240722|2024-07-22 16:30]]
+  - priority: high, section: Urgent, tags: project, deadline
   - Subtasks:
 
     - [x] Research market trends
 
-      - created: [[2024-07-22|2024-07-22 09:15]] -> completed: [[2024-07-22|2024-07-22 11:30]]
+      - created: [[JD 20240721|2024-07-21 09:15]] -> completed: [[JD 20240722|2024-07-22 11:30]]
 
     - [x] Draft executive summary
-      - created: [[2024-07-22|2024-07-22 11:45]] -> completed: [[2024-07-22|2024-07-22 14:00]]
+      - created: [[JD 20240722|2024-07-22 11:45]] -> completed: [[JD 20240722|2024-07-22 14:00]]
 
 - [x] Schedule team meeting
-  - created: [[2024-07-22|2024-07-22 10:00]] -> completed: [[2024-07-22|2024-07-22 10:15]]
-  - due: [[2024-07-23|2024-07-23 09:00]]
-  - section: Administrative, tags: #team, #communication
+  - created: [[JD 20240722|2024-07-22 10:00]], due: [[JD 20240723|2024-07-23 09:00]] -> completed: [[JD 20240722|2024-07-22 10:15]]
+  - section: Administrative, tags: team, communication
 
-### Personal
+### task(today)
 
-- [x] Buy groceries
+- [x] Start reading "The Great Gatsby"
 
-  - created: [[2024-07-22|2024-07-22 17:00]] -> completed: [[2024-07-22|2024-07-22 18:30]]
-  - section: Errands, tags: #shopping
+  - created: [[JD 20240722|2024-07-22 17:00]] -> completed: [[JD 20240722|2024-07-22 18:30]]
+  - section: Errands, tags: book
 
-- [-] Start reading "The Great Gatsby"
-  - created: [[2024-07-22|2024-07-22 20:00]] -> completed: [[2024-07-22|2024-07-22 21:00]]
-  - section: Reading List, tags: #book, #partiallyComplete
+- [-] Buy groceries
+  - created: [[JD 20240722|2024-07-22 20:00]] -> completed: [[JD 20240722|2024-07-22 21:00]]
+  - section: Reading List, tags: shopping, notPossible
 ```
 
 This example showcases various features:
@@ -263,6 +262,90 @@ This example showcases various features:
 - For issues with Obsidian integration, double-check your Obsidian settings path and ensure the Periodic Notes plugin is correctly configured (if using).
 - If certain reminders are not appearing in the output, check your list filtering settings and ensure the tasks are marked as completed in iOS Reminders.
 
+## Task Chart Representation and Navigation via DataviewJS snippet
+
+This DataviewJS snippet, found in the dataviewjs/ directory, generates an interactive stacked bar chart that visualizes completed tasks across different categories over time. The chart provides an easy way to track productivity and task completion trends.
+
+### Usage
+
+To use this snippet, paste the following code into a DataviewJS code block in your Obsidian note:
+
+````markdown
+```dataviewjs
+// Paste the entire code snippet here
+await generateCompletedTasksBlock(dv);
+```
+````
+
+### Features
+
+1. **Better Daily Note Navigation**: Clicking on a bar or the empty bar space opens the corresponding daily note.
+2. **Multi-category Visualization**: The chart displays completed tasks across various predefined categories, each represented by a different color.
+3. **Time Range**: By default, the chart shows data for 15 days, centered around the current note's date, or up to the last 14 days before today.
+4. **Color-coded Dates**: The current note's date is highlighted in green, and today's date is highlighted in blue for easy reference.
+
+### Customization
+
+You can customize the following aspects of the chart:
+
+1. **Time Range**: Modify the `DAYS_TO_SHOW` constant at the beginning of the script to change the number of days displayed.
+2. **Categories**: Edit the `TASK_CATEGORIES` object to add, remove, or modify task categories. Each category can have multiple reminder list patterns and custom colors.
+3. **Chart Appearance**: Adjust the `getChartSettings` function to modify chart options such as colors, fonts, and layout.
+
+### Task Categories
+
+The default categories can be customized as you see fit.
+
+Each category is associated with specific reminder list patterns and has a unique color in the chart.
+
+### Screenshots
+
+As a side note: in the screenshots below you can also see the progression of the creation and publication of this project, with the tasks being completed.
+
+#### Desktop View
+
+![Obsidian Desktop Screenshot](misc/screenshot_obsidian_desktop.png)
+
+#### Mobile View
+
+<div style="text-align: center;">
+<img src="misc/screenshot_obsidian_mobile.jpg" alt="Obsidian Mobile Screenshot" style="width: 600px; margin:auto;">
+</div>
+
+### Color Coding
+
+The chart uses color coding to highlight important dates:
+
+- **Blue Label**: Represents today's date, making it easy to identify the current day in the chart.
+- **Green Label**: Indicates the date of the current note being viewed, allowing for quick orientation within the timeline.
+- **Colored Bars**: Each color in the stacked bars represents a different task category as defined in the `TASK_CATEGORIES` object.
+
+### How It Works
+
+1. The script fetches daily notes within the specified date range.
+2. It parses the "Completed Tasks" section of each note, categorizing tasks based on their headers.
+3. The data is aggregated and prepared for chart rendering.
+4. A stacked bar chart is created using the Chart.js library (via the Obsidian Charts plugin).
+5. The chart is inserted into the current note using Dataview's element creation capabilities.
+
+### Requirements
+
+- Obsidian Dataview plugin
+- Obsidian Charts plugin
+
+### Notes
+
+- Ensure your daily notes follow the expected format with a "Completed Tasks" section and appropriate task list headers.
+- The script assumes the existence of a `journal/day` folder for daily notes. Adjust the folder path if your setup differs.
+
+By using this DataviewJS snippet, you can gain valuable insights into your task completion patterns and navigate your daily notes more efficiently.
+
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
+
+## Support
+
+If you find this project helpful, consider buying me a coffee to support further development:
+
+<a href="https://www.buymeacoffee.com/cstelmach" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
