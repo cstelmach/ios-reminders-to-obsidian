@@ -2,10 +2,7 @@
 
 ## Useful links:
 
-- AI Conversation of Creation: https://chatgpt.com/share/33cb0247-8c45-4fd1-a1e5-f2c11ec114e5
 - SQL DB Notes: https://gist.github.com/0xdevalias/ccc2b083ff58b52aa701462f2cfb3cc8#reminders-sqlite-coredata-models--tables
-
-
 
 ## Tasks
 
