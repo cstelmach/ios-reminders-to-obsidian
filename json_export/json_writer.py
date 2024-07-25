@@ -17,19 +17,18 @@ def export_reminders_to_json(completed_reminders):
     reminders_by_date = group_reminders_by_date(completed_reminders)
 
     for date, reminders in reminders_by_date.items():
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         json_file_path = os.path.join(
-            json_folder_path, f"{date.strftime('%Y-%m-%d')}.json"
+            json_folder_path, f"{date.strftime('%Y-%m-%d')}_{timestamp}.json"
         )
 
-        existing_data = []
-        if os.path.exists(json_file_path):
-            with open(json_file_path, "r") as file:
-                existing_data = json.load(file)
+        try:
+            with open(json_file_path, "w", encoding="utf-8") as file:
+                json.dump(reminders, file, ensure_ascii=False, indent=2, default=str)
 
-        existing_data.extend(reminders)
-
-        with open(json_file_path, "w", encoding="utf-8") as file:
-            json.dump(existing_data, file, ensure_ascii=False, indent=2, default=str)
+            print(f"Successfully exported JSON to {json_file_path}")
+        except Exception as e:
+            print(f"Error exporting JSON for {date}: {e}")
 
 
 def group_reminders_by_date(completed_reminders):

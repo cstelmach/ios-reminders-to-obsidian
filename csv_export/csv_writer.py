@@ -17,20 +17,23 @@ def export_reminders_to_csv(completed_reminders):
     reminders_by_date = group_reminders_by_date(completed_reminders)
 
     for date, reminders in reminders_by_date.items():
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         csv_file_path = os.path.join(
-            csv_folder_path, f"{date.strftime('%Y-%m-%d')}.csv"
+            csv_folder_path, f"{date.strftime('%Y-%m-%d')}_{timestamp}.csv"
         )
-        file_exists = os.path.isfile(csv_file_path)
 
-        with open(csv_file_path, "a", newline="", encoding="utf-8") as csvfile:
-            fieldnames = get_fieldnames(reminders)
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-            if not file_exists:
+        try:
+            with open(csv_file_path, "w", newline="", encoding="utf-8") as csvfile:
+                fieldnames = get_fieldnames(reminders)
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                 writer.writeheader()
 
-            for reminder in reminders:
-                writer.writerow(format_reminder_for_csv(reminder))
+                for reminder in reminders:
+                    writer.writerow(format_reminder_for_csv(reminder))
+
+            print(f"Successfully exported CSV to {csv_file_path}")
+        except Exception as e:
+            print(f"Error exporting CSV for {date}: {e}")
 
 
 def group_reminders_by_date(completed_reminders):
