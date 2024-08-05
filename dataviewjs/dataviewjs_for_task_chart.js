@@ -97,11 +97,7 @@ async function countCompletedTasks(content, categories) {
       if (!categoryTaskCounts[category]) {
         categoryTaskCounts[category] = 0;
       }
-    } else if (
-      inCompletedTasksSection &&
-      header &&
-      line.match(/^\s*- \[x\]/)
-    ) {
+    } else if (inCompletedTasksSection && header && line.match(/^\s*- \[x\]/)) {
       let category = categorizeTaskList(header, categories);
       categoryTaskCounts[category] += 1;
     }
@@ -116,7 +112,10 @@ function getDateRange(currentNoteMoment, today) {
   if (today.diff(currentNoteMoment, "days") <= halfRange) {
     startDate = currentNoteMoment
       .clone()
-      .subtract(DAYS_TO_SHOW - today.diff(currentNoteMoment, "days") - 1, "days");
+      .subtract(
+        DAYS_TO_SHOW - today.diff(currentNoteMoment, "days") - 1,
+        "days"
+      );
     endDate = today;
   } else {
     startDate = currentNoteMoment.clone().subtract(halfRange, "days");
@@ -131,9 +130,7 @@ function prepareChartData(labels, dateCategoryCounts, categories) {
     return {
       label: category,
       data: labels.map((label) =>
-        dateCategoryCounts[label]
-          ? dateCategoryCounts[label][category] || 0
-          : 0
+        dateCategoryCounts[label] ? dateCategoryCounts[label][category] || 0 : 0
       ),
       backgroundColor: categories[category].backgroundColor,
       borderColor: categories[category].borderColor,
@@ -204,6 +201,38 @@ function getChartSettings(labels, datasets, currentNoteMoment, today) {
             // Filter out the invisible dataset from the tooltip
             return tooltipItem.datasetIndex !== newDatasets.length - 1;
           },
+          callbacks: {
+            title: function (tooltipItems) {
+              let total = tooltipItems.reduce(
+                (sum, item) => sum + (item.parsed.y || 0),
+                0
+              );
+              return `${tooltipItems[0].label} | ${total}✔︎`;
+            },
+            label: function (context) {
+              let value = context.parsed.y || 0;
+              if (value > 0) {
+                let label = context.dataset.label || "";
+                return label + ": " + value;
+              }
+              return null;
+            },
+            afterBody: function (tooltipItems) {
+              // We don't need to calculate the total here anymore as it's now in the title
+              return null;
+            },
+          },
+          titleFont: {
+            size: 10,
+          },
+          bodyFont: {
+            size: 9,
+          },
+          footerFont: {
+            size: 6,
+          },
+          mode: "index",
+          intersect: false,
         },
       },
       scales: {
@@ -292,9 +321,7 @@ async function generateCompletedTasksBlock(dv) {
   // Get the notes within the date range
   let dailyNotes = dv
     .pages(`"journal/day"`)
-    .filter((n) =>
-      moment(n.file.day).isBetween(startDate, endDate, null, "[]")
-    )
+    .filter((n) => moment(n.file.day).isBetween(startDate, endDate, null, "[]"))
     .sort((b) => b.file.ctime, "desc");
 
   // Create an array to hold the counts of completed tasks for each note and header
@@ -305,8 +332,7 @@ async function generateCompletedTasksBlock(dv) {
     try {
       // Extract the date from the filename or use the creation date
       let noteDate =
-        extractDateFromFilename(note.file.name) ||
-        moment(note.file.ctime);
+        extractDateFromFilename(note.file.name) || moment(note.file.ctime);
 
       // Get the content of the note
       let content = await dv.io.load(note.file.path);
@@ -345,11 +371,7 @@ async function generateCompletedTasksBlock(dv) {
 
   // Prepare data for the chart
   let labels = [];
-  for (
-    let m = startDate.clone();
-    m.isSameOrBefore(endDate);
-    m.add(1, "days")
-  ) {
+  for (let m = startDate.clone(); m.isSameOrBefore(endDate); m.add(1, "days")) {
     labels.push(m.format("YYYY-MM-DD"));
   }
 
@@ -359,7 +381,12 @@ async function generateCompletedTasksBlock(dv) {
   let chartEl = dv.el("chart__completed-tasks", "");
 
   // Get chart settings
-  let chartSettings = getChartSettings(labels, datasets, currentNoteMoment, today);
+  let chartSettings = getChartSettings(
+    labels,
+    datasets,
+    currentNoteMoment,
+    today
+  );
 
   // Render the chart using the Charts plugin
   await window.renderChart(chartSettings, chartEl);
