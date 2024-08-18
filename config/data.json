@@ -37,7 +37,9 @@
       ".*Doing",
       ".*Today.*",
       ".*Done",
-      ".*hidden"
+      ".*hidden",
+      ".*Active.Course.*",
+      ".*Inactive.Course.*"
     ],
     "sectionsToAddAsTags": [
       {
