@@ -10,8 +10,11 @@ def format_tag(tag):
 
 
 def write_task_tags(tags, prefix="", return_string=False):
-    if tags:
-        formatted_tags = [format_tag(tag) for tag in tags if tag.strip()]
+    tags_to_hide = config.get("tags", {}).get("tagsToHide", [])
+    filtered_tags = [tag for tag in tags if tag.strip() and tag not in tags_to_hide]
+
+    if filtered_tags:
+        formatted_tags = [format_tag(tag) for tag in filtered_tags]
         if formatted_tags:
             tag_string = f"tags: {', '.join(formatted_tags)}"
             if return_string:

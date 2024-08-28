@@ -48,6 +48,15 @@
       }
     ]
   },
+  "tags": {
+    "tagsToHide": [
+      "ActiveCourse1",
+      "ActiveCourse2",
+      "ActiveCourse3",
+      "ActiveCourse4",
+      "ActiveCourse5"
+    ]
+  },
   "checkboxes": {
     "partiallyCompletedCheckbox": "[/]",
     "cancelledCheckbox": "[-]",

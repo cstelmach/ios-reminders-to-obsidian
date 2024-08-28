@@ -24,6 +24,9 @@
       }
     ]
   },
+  "tags": {
+    "tagsToHide": ["tagName1", "tagName2"]
+  },
   "lists": {
     "listsToImport": [],
     "importAllListsButOmitted": false,
