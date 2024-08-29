@@ -1,5 +1,4 @@
 # ios_reminders_to_markdown_journal/database/section_utils.py
-
 import json
 import re
 from .db_utils import get_db_connection
@@ -57,9 +56,12 @@ def get_section_memberships(list_id):
         memberships_json = json.loads(memberships_data[0])
 
         # Create a dictionary of reminder_id: section_id
-        memberships_dict = {
-            m["memberID"]: m["groupID"] for m in memberships_json["memberships"]
-        }
+        memberships_dict = {}
+        for m in memberships_json.get("memberships", []):
+            member_id = m.get("memberID")
+            group_id = m.get("groupID")
+            if member_id is not None and group_id is not None:
+                memberships_dict[member_id] = group_id
 
         return memberships_dict
     finally:
