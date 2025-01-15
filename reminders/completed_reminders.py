@@ -9,6 +9,7 @@ from database import (
     add_section_to_reminders,
     find_parent_reminder,
 )
+from .tag_extractor import extract_hashtags_from_notes
 from config import config
 
 
@@ -75,9 +76,13 @@ def get_completed_reminders_for_list(list_names, start_date=None, end_date=None)
 
 
 def create_reminder_data(reminder, completion_date, creation_date, use_database):
+    # Extract notes and clean hashtags
+    notes = reminder.notes()
+    cleaned_notes, extracted_tags = extract_hashtags_from_notes(notes)
+
     reminder_data = {
         "name": reminder.title(),
-        "body": reminder.notes(),
+        "body": cleaned_notes,  # Use cleaned notes without hashtags
         "creationDate": (
             creation_date.strftime("%Y-%m-%d %H:%M:%S") if creation_date else None
         ),
@@ -97,10 +102,13 @@ def create_reminder_data(reminder, completion_date, creation_date, use_database)
     }
 
     if use_database:
-        reminder_data["tags"] = get_tags_for_reminder(reminder.calendarItemIdentifier())
+        # Get existing tags from database
+        existing_tags = get_tags_for_reminder(reminder.calendarItemIdentifier())
+        # Combine with extracted tags, ensuring no duplicates
+        reminder_data["tags"] = list(set(existing_tags + extracted_tags))
         reminder_data["url"] = get_url_for_reminder(reminder.calendarItemIdentifier())
     else:
-        reminder_data["tags"] = []
+        reminder_data["tags"] = extracted_tags  # Just use extracted tags if no database
         reminder_data["url"] = None
 
     return reminder_data

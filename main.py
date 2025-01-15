@@ -57,3 +57,7 @@ def list_completed_reminders(test_lists=None):
 
 if __name__ == "__main__":
     completed_reminders = list_completed_reminders()
+
+
+    # execute via command line, command:
+    # /opt/homebrew/Caskroom/miniconda/base/bin/python3 /Users/cs/local/code/applications_large/ios_reminders_to_markdown_journal/main.py
