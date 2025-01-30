@@ -16,11 +16,11 @@ def format_property(key, value, use_metadata_formatting=None):
 
 def get_priority_value(priority):
     if priority == 1:
-        return "low"
+        return "high"
     elif priority == 5:
         return "medium"
     elif priority == 9:
-        return "high"
+        return "low"
     else:
         return None
 
